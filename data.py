@@ -5,12 +5,14 @@ class Data(ABC):
     Abstract base class representing a piece of data.
 
     This class defines a contract for how data should be structured and stored.
-    Subclasses must implement the `store_data` method, which defines how the data 
+    Subclasses must implement the `_store_data` method, which defines how the data 
     should be persisted or processed.
+
+    The _store_data is a protected method denoting it should not be used outside of the class itself. 
     """
 
     @abstractmethod
-    def store_data(self):
+    def _store_data(self):
         """
         Define how the data should be stored.
 

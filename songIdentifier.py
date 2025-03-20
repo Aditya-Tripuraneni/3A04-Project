@@ -2,6 +2,6 @@ from abc import ABC, abstractmethod
 
 class SongIdentifier:
     @abstractmethod
-    def identifySong(data):
+    def identify_song(data):
         pass
 
