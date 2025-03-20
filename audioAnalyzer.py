@@ -1,7 +1,7 @@
 from agents import Agent
 
 
-class AudioAgent(Agent):
+class AudioAnalyzer(Agent):
 
     def analyze_data(self, data):
         return "hi"
