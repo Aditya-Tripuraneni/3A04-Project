@@ -3,10 +3,10 @@ from songIdentifier import SongIdentifier
 from model import multiturn_generate_content
 from song import Song
 from data import Data
-import json
 from jsonpath_ng import parse
 
 class DescriptionFinder(SongIdentifier):
+    
     def __init__(self, data: Description):
         self.description_data = data
 

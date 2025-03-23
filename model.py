@@ -1,6 +1,8 @@
-import base64
 import vertexai
-from vertexai.generative_models import GenerativeModel, SafetySetting, Part
+from vertexai.generative_models import GenerativeModel
+from configurations import SAFTEY_SETTINGS, GENERATION_CONFIG
+
+# I need a seperate model that can send audio files generate the code for this
 
 
 
@@ -18,35 +20,12 @@ def multiturn_generate_content(input_data):
     # response from the model
     response = chat.send_message(
         [input_data],
-        generation_config=generation_config,
-        safety_settings=safety_settings
+        generation_config= GENERATION_CONFIG,
+        safety_settings = SAFTEY_SETTINGS
         )
     
     return response
 
 
-generation_config = {
-    "max_output_tokens": 8192,
-    "temperature": 1,
-    "top_p": 0.95,
-}
 
-safety_settings = [
-    SafetySetting(
-        category=SafetySetting.HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-        threshold=SafetySetting.HarmBlockThreshold.OFF
-    ),
-    SafetySetting(
-        category=SafetySetting.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-        threshold=SafetySetting.HarmBlockThreshold.OFF
-    ),
-    SafetySetting(
-        category=SafetySetting.HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-        threshold=SafetySetting.HarmBlockThreshold.OFF
-    ),
-    SafetySetting(
-        category=SafetySetting.HarmCategory.HARM_CATEGORY_HARASSMENT,
-        threshold=SafetySetting.HarmBlockThreshold.OFF
-    ),
-]
 

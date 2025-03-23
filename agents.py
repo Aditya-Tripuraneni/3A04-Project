@@ -14,6 +14,11 @@ class Agent(ABC):
         submit_partial_solution(): Submit the intermediate or final solution to the blackboard.
     """
 
+
+    def __init__(self):
+        self.prediction = {} 
+        self.analyzed = False # state representing whether the data has been analyzed
+
     @abstractmethod
     def analyze_data(self, data):
         """
@@ -25,7 +30,6 @@ class Agent(ABC):
         """
         pass
 
-    @abstractmethod
     def get_confidence_score(self):
         """
         Return the confidence score of the analysis.
@@ -34,9 +38,11 @@ class Agent(ABC):
             float: A confidence score between 0 and 1.
         
         """
-        pass
+        if not self.analyzed:
+            raise ValueError("Data has not been analyzed yet.")
+        
+        return self.prediction["confidence_score"]
 
-    @abstractmethod
     def submit_partial_solution(self):
         """
         Submit the partial solution to the blackboard.
@@ -46,4 +52,8 @@ class Agent(ABC):
         
 
         """
-        pass
+
+        if not self.analyze_data:
+            raise ValueError("Data has not been analyzed yet.")
+        
+        return self.prediction
