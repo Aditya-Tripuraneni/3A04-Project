@@ -1,24 +1,21 @@
 from agents import Agent
 from data import Data
-from descriptionFinder import DescriptionFinder
+from naturalLanguageProcessor import DescriptionFinder
 from description import Description
 
 
 class DescriptionAnalyzer(Agent):
 
     def __init__(self):
-        self.prediction = None
+        super().__init__()
+        
 
     def analyze_data(self, data: Data):
         description_finder = DescriptionFinder(data)
         song_data = description_finder.identify_song()
         self.prediction = song_data.get_song_data()
+        self.analyzed = True
 
-    def get_confidence_score(self):
-        return self.prediction["confidence_score"]
-    
-    def submit_partial_solution(self):
-        return self.prediction
 
 
 # Example usage

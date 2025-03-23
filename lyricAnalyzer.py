@@ -3,73 +3,94 @@ from lyricalFinder import LyricalFinder
 from data import Data
 from lyrics import Lyrics
 
-class LyricalAnalyzer(Agent):
 
+class LyricalAnalyzer(Agent):
+    """Analyzes lyrical data and predicts the song.
+
+    This class processes lyrical data using the LyricalFinder agent
+    to identify the song and extract useful metadata, such as 
+    confidence scores and partial solutions.
+    """
+
+    def __init__(self):
+        super().__init__()
+    
+    
     def analyze_data(self, data: Data):
+        """Analyzes the provided data and predicts the song.
+        
+         Args:
+             data (Data): The lyrical data used to identify the song.
+        
+         This method creates a LyricalFinder instance, processes the input
+         data, and stores the resulting song data in self.prediction.
+        """
         lyrical_finder = LyricalFinder(data)
         song_data = lyrical_finder.identify_song()
-        print(song_data.get_song_data())
+        
+        # Store the identified song data.
+        self.prediction = song_data.get_song_data()
+        self.analyzed = True
 
-    def get_confidence_score(self):
-        return 0.5
     
-    def submit_partial_solution(self):
-        return 6
-    
-
+   
 
 stored_lyrics = """
-Never know when someone come and try to take my life
-I been sleepin' with the .45 like every night
-In the whip, I pray to God I don't see flashin' lights
-Goddamn they right behind me
-And I wake up everyday, I wake up everyday with this anxiety
-And they know where I stay
-Got "Malone" on my plates
-And they followin' me
-Two hundred bands under the floor of the kitchen
-A little more up in the walls and the ceilin'
-Even family and friends started switchin'
-Ever since I got that check, seen 'em itchin'
-Eyes open, I see you, I'm watchin' you, yeah
-More people wanna be you, don't trust no one
-Tell me why I can't get no relief
-Wonderin' when they'll come for me
-A paranoid man makes paranoid plans
-I'll do what I can, but it's out of my hands
-Strugglin' just to find my peace
-Sometimes feel like I got no friends
-Can't trust a soul like I'm Snowden
-Right by the bed, keep it loaded
-Lord, have mercy if they broken
-I don't ever sleep, yeah, I'm wide awake
-If you try to pull up to my place
-Beam is gonna hit you a mile away
-I promise one of us gonna die today
-Helicopters in the sky
-No, he can't escape the eyes
-Politicians and the lies
-Tell me what's the point of pickin' sides
-Tell me why I can't get no relief
-Wonderin' when they'll come for me
-A paranoid man makes paranoid plans
-I'll do what I can, but it's out of my hands
-Strugglin' just to find my peace
-Mind is runnin' all day
-Cost me more than money and I'm payin' the price, yeah
-I ain't goin' nowhere
-Killin' myself so I can make me a life, yeah
-Minute after minute
-Never had a limit
-Woke up every mornin', knew that I just had to get it
-Windows always tinted
-You ain't lookin' in it
-Either way I know they'll come for me again
-Tell me why I can't get no relief
-Wonderin' when they'll come for me
-A paranoid man makes paranoid plans
-I'll do what I can, but it's out of my hands
-Strugglin' just to find my peace
+The club isn't the best place to find a lover
+So the bar is where I go
+Me and my friends at the table doing shots
+Drinking fast and then we talk slow
+Come over and start up a conversation with just me
+And trust me I'll give it a chance now
+Take my hand, stop, put Van the Man on the jukebox
+And then we start to dance, and now I'm singing like
+Girl, you know I want your love
+Your love was handmade for somebody like me
+Come on now, follow my lead
+I may be crazy, don't mind me
+Say, boy, let's not talk too much
+Grab on my waist and put that body on me
+Come on now, follow my lead
+Come, come on now, follow my lead
+I'm in love with the shape of you
+We push and pull like a magnet do
+Although my heart is falling too
+I'm in love with your body
+And last night you were in my room
+And now my bedsheets smell like you
+Every day discovering something brand new
+I'm in love with your body
+(Oh-I-oh-I-oh-I-oh-I)
+I'm in love with your body
+(Oh-I-oh-I-oh-I-oh-I)
+I'm in love with your body
+(Oh-I-oh-I-oh-I-oh-I)
+I'm in love with your body
+Every day discovering something brand new
+I'm in love with the shape of you
+One week in we let the story begin
+We're going out on our first date
+You and me are thrifty, so go all you can eat
+Fill up your bag and I fill up a plate
+We talk for hours and hours about the sweet and the sour
+And how your family is doing okay
+And leave and get in a taxi, then kiss in the backseat
+Tell the driver make the radio play, and I'm singing like
+Girl, you know I want your love
+Your love was handmade for somebody like me
+Come on now, follow my lead
+I may be crazy, don't mind me
+Say, boy, let's not talk too much
+Grab on my waist and put that body on me
+Come on now, follow my lead
+Come, come on now, follow my lead
+I'm in love with the shape of you
+We push and pull like a magnet do
+Although my heart is falling too
+I'm in love with your body
+And last night you were in my room
+And now my bedsheets smell like you
+Every day discovering something brand new
 """
 
 lyric_data = Lyrics(stored_lyrics)
@@ -77,3 +98,4 @@ lyric_data = Lyrics(stored_lyrics)
 lyrical_agent = LyricalAnalyzer()
 
 lyrical_agent.analyze_data(lyric_data)
+print(f"Confidence Score: {lyrical_agent.get_confidence_score()}")

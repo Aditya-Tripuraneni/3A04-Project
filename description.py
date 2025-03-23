@@ -1,7 +1,19 @@
 from data import Data
 
 class Description(Data):
-    def __init__(self, artist: str, genre: str, year: str, albumName: str, mood: str, genderOfArtist: str, language: str, region: str, featuredArtist: str): 
+    def __init__(
+            self, 
+            artist: str, 
+            genre: str, 
+            year: str, 
+            albumName: str, 
+            mood: str, 
+            genderOfArtist: str, 
+            language: str, 
+            region: str, 
+            featuredArtist: str
+        ): 
+        
         self.artist = artist
         self.genre = genre
         self.year = year
@@ -16,6 +28,7 @@ class Description(Data):
     
     """
     Protected method, not meant to be called outside this class. 
+    Purpose is to store description attributes which make up a song.
     """
     def _store_data(self):
         self.data["artist"] = self.artist if self.artist else "Unknown"
