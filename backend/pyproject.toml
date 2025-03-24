@@ -1,0 +1,113 @@
+[project]
+name = "songsnap-backend"
+description = "SongSnap Backend"
+version = "0.1.0"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "bentoml>=1.4.6",
+  "fastapi>=0.115.11",
+  "ffmpeg-python>=0.2.0",
+  "google-cloud-aiplatform>=1.71.1",
+  "google-genai>=1.7.0",
+  "numpy>=2.2.4",
+  "pillow>=11.1.0",
+  "pydantic>=2.10.6",
+  "typing-extensions>=4.12.2",
+  "vertexai>=1.71.1",
+  "yt-dlp>=2025.3.21",
+]
+
+[tool.uv]
+package = false
+dev-dependencies = [
+  "ipython>=9.0.2",
+  "jupyter-client>=8.6.3",
+  "jupytext>=1.16.4",
+  "mypy>=1.13.0",
+  "plotly>=5.24.1",
+  "pnglatex>=1.1",
+  "pylatexenc>=2.10",
+  "pynvim>=0.5.0",
+  "pyperclip>=1.9.0",
+  "ruff>=0.6.6",
+]
+
+[tool.ruff]
+extend-include = ["*.ipynb"]
+preview = true
+line-length = 119
+indent-width = 2
+
+[tool.ruff.format]
+preview = true
+quote-style = "single"
+indent-style = "space"
+skip-magic-trailing-comma = true
+docstring-code-format = true
+
+[tool.ruff.lint]
+ignore = [
+  "RUF012",
+  "ANN",    # Mypy is better at this
+  "E722",
+  "D",
+]
+select = [
+  "F",
+  "D",
+  "G",    # flake8-logging-format
+  "PERF", # perflint
+  "RUF",  # Ruff-specific rules
+  "W6",
+  "E71",
+  "E72",
+  "E112",
+  "E113",
+  # "E124",
+  "E203",
+  "E272",
+  # "E303",
+  # "E304",
+  # "E501",
+  # "E502",
+  "E702",
+  "E703",
+  "E731",
+  "W191",
+  "W291",
+  "W293",
+  "UP039", # unnecessary-class-parentheses
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.pyright]
+exclude = ["**/node_modules", "**/__pycache__"]
+useLibraryCodeForTypes = true
+verboseOutput = true
+enableExperimentalFeatures = true
+defineConstant = { MYPY = true }
+venvPath = "."
+venv = ".venv"
+pythonVersion = "3.11"
+reportMissingImports = "warning"
+reportMissingTypeStubs = false
+reportPrivateUsage = "warning"
+reportUnknownArgumentType = "warning"
+reportUnsupportedDunderAll = "warning"
+reportWildcardImportFromLibrary = "warning"
+
+[tool.bentoml.build]
+service = "service.py:SnapRAG"
+include = [
+  "LICENCE",
+  "*.py",
+  "agents/",
+  "models/",
+  "libs/",
+  "*.txt",
+  "*.md",
+  "*.json",
+]
