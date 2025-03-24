@@ -1,4 +1,5 @@
 annotated-types==0.7.0
+anyio==4.9.0
 beautifulsoup4==4.13.3
 cachetools==5.5.2
 certifi==2025.1.31
@@ -15,11 +16,15 @@ google-cloud-core==2.4.3
 google-cloud-resource-manager==1.14.2
 google-cloud-storage==2.19.0
 google-crc32c==1.7.0
+google-genai==1.7.0
 google-resumable-media==2.7.2
 googleapis-common-protos==1.69.2
 grpc-google-iam-v1==0.14.2
 grpcio==1.71.0
 grpcio-status==1.71.0
+h11==0.14.0
+httpcore==1.0.7
+httpx==0.28.1
 idna==3.10
 jsonpath-ng==1.7.0
 kiwisolver==1.4.8
@@ -43,7 +48,9 @@ rsa==4.9
 setuptools==75.8.0
 shapely==2.0.7
 six==1.17.0
+sniffio==1.3.1
 soupsieve==2.6
 typing_extensions==4.12.2
 urllib3==2.3.0
+websockets==15.0.1
 wheel==0.45.1
