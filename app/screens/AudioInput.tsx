@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet, Modal, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import * as DocumentPicker from 'expo-document-picker';
 
@@ -32,7 +32,7 @@ export default function AudioInput() {
     } catch (error) {
       console.error('Error picking audio file', error);
     }
-  };
+  }
 
   const handleNext = () => {
     if (parsedMethods.length > 0) {
