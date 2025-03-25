@@ -1,5 +1,3 @@
-
-
 from audio import Audio
 from data import Data
 from audioModel import classify_song
@@ -24,7 +22,7 @@ class AudioIdentifier(SongIdentifier):
         name_part, artist_part = song_info[0].split(' Artist:')
         song_name = name_part.replace("Name:", "").strip()
         artist_name = artist_part.strip()
-        confidence_score = song_info[1].strip() 
+        confidence_score = float(song_info[1].strip())
 
         song_data = Song(song_name, artist_name, confidence_score)
 

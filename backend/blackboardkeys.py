@@ -8,6 +8,6 @@ class FactKeys(Enum):
 
 class PartialSolutionKeys(Enum):
     # PARTIAL SOLUTION KEYS
-    AUDIO_FILE = "audio_file"
+    AUDIO_RESULT = "audio_result"
     LYRICAL_RESULT = "lyrical_result"
     DESCRIPTION_RESULT = "description_result"

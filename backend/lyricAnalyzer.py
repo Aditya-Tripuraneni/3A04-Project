@@ -1,7 +1,7 @@
 from agents import Agent
 from lyricalFinder import LyricalFinder
 from data import Data
-from lyrics import Lyrics
+from song import Song
 
 
 class LyricalAnalyzer(Agent):
@@ -16,7 +16,7 @@ class LyricalAnalyzer(Agent):
         super().__init__()
     
     
-    def analyze_data(self, data: Data):
+    def analyze_data(self, data: Data) -> Song:
         """Analyzes the provided data and predicts the song.
         
          Args:
@@ -28,9 +28,12 @@ class LyricalAnalyzer(Agent):
         lyrical_finder = LyricalFinder(data)
         song_data = lyrical_finder.identify_song()
         
-        # Store the identified song data.
-        self.prediction = song_data.get_song_data()
+        # Store the identified song data
+        self.set_prediction(song_data.get_song_data())
+
         self.analyzed = True
+
+        return song_data
 
     
    
@@ -93,9 +96,9 @@ And now my bedsheets smell like you
 Every day discovering something brand new
 """
 
-lyric_data = Lyrics(stored_lyrics)
+# lyric_data = Lyrics(stored_lyrics)
 
-lyrical_agent = LyricalAnalyzer()
+# lyrical_agent = LyricalAnalyzer()
 
-lyrical_agent.analyze_data(lyric_data)
-print(f"Confidence Score: {lyrical_agent.get_confidence_score()}")
+# lyrical_agent.analyze_data(lyric_data)
+# # print(f"Confidence Score: {lyrical_agent.get_confidence_score()}")

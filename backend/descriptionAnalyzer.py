@@ -2,6 +2,7 @@ from agents import Agent
 from data import Data
 from naturalLanguageProcessor import DescriptionFinder
 from description import Description
+from song import Song
 
 
 class DescriptionAnalyzer(Agent):
@@ -10,11 +11,17 @@ class DescriptionAnalyzer(Agent):
         super().__init__()
         
 
-    def analyze_data(self, data: Data):
+    def analyze_data(self, data: Data) -> Song:
         description_finder = DescriptionFinder(data)
         song_data = description_finder.identify_song()
-        self.prediction = song_data.get_song_data()
+
+        # store the identified song data
+        self.set_prediction(song_data.get_song_data())
+
+    
         self.analyzed = True
+
+        return song_data
 
 
 
@@ -32,6 +39,6 @@ sample_description = Description(
 )
 
 
-description_agent = DescriptionAnalyzer()
-description_agent.analyze_data(sample_description)
+# description_agent = DescriptionAnalyzer()
+# description_agent.analyze_data(sample_description)
     

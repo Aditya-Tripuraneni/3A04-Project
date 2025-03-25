@@ -1,6 +1,6 @@
 from description import Description
 from songIdentifier import SongIdentifier
-from model import multiturn_generate_content
+from textModel import multiturn_generate_content
 from song import Song
 from data import Data
 from jsonpath_ng import parse
@@ -41,16 +41,13 @@ class DescriptionFinder(SongIdentifier):
         song_info = song_output[0].value 
 
         # extract the confidence value from DatumInContext 
-        confidence_score = avg_log_probability[0].value if avg_log_probability else None
+        confidence_score = float(avg_log_probability[0].value) if avg_log_probability else None
 
         # Form of the song_info is "Name: XXX Artist: YYY"
         name_part, artist_part = song_info.split(' Artist:')
 
         song_name = name_part.replace("Name:", "").strip()
         artist_name = artist_part.strip()
-
-        print(song_name)
-        print(artist_name)
 
         song_data = Song(song_name, artist_name, confidence_score)
 

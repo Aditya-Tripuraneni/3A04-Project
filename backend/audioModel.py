@@ -11,8 +11,11 @@ def classify_song(audio_file_path):
     )
   
     # Read and encode the audio file
-    with open(audio_file_path, "rb") as audio_file:
-        audio_data = base64.b64encode(audio_file.read()).decode('utf-8')
+    if audio_file_path:
+        with open(audio_file_path, "rb") as audio_file:
+            audio_data = base64.b64encode(audio_file.read()).decode('utf-8')
+    else:
+        raise FileNotFoundError("Audio file not found.")
 
     # Convert audio data to Part object
     audio_part = types.Part.from_bytes(

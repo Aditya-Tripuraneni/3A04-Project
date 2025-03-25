@@ -16,7 +16,7 @@ class Agent(ABC):
 
 
     def __init__(self):
-        self.prediction = {} 
+        self.__prediction = {} 
         self.analyzed = False # state representing whether the data has been analyzed
 
     @abstractmethod
@@ -29,21 +29,23 @@ class Agent(ABC):
         
         """
         pass
+    
 
-    def get_confidence_score(self):
+    def set_prediction(self, prediction: dict):
         """
-        Return the confidence score of the analysis.
+        Sets the prediction data by unpacking the dictionary.
 
-        Returns:
-            float: A confidence score between 0 and 1.
-        
+        Args:
+            prediction (dict): A dictionary containing prediction results.
         """
-        if not self.analyzed:
-            raise ValueError("Data has not been analyzed yet.")
+        if not isinstance(prediction, dict):
+            raise TypeError("Prediction must be a dictionary")
         
-        return self.prediction["confidence_score"]
+        self.__prediction = {**prediction}  # Unpacks and sets the dictionary
+        self.analyzed = True
 
-    def submit_partial_solution(self):
+
+    def get_partial_solution(self):
         """
         Submit the partial solution to the blackboard.
 
@@ -56,4 +58,4 @@ class Agent(ABC):
         if not self.analyze_data:
             raise ValueError("Data has not been analyzed yet.")
         
-        return self.prediction
+        return self.__prediction

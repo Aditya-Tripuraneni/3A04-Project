@@ -10,4 +10,4 @@ class Audio(Data):
         pass
 
     def get_audio_data(self) -> str:
-        return  self.audio_file
+        return self.audio_file
