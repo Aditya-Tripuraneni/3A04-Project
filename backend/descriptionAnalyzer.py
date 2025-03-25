@@ -16,9 +16,8 @@ class DescriptionAnalyzer(Agent):
         song_data = description_finder.identify_song()
 
         # store the identified song data
-        self.set_prediction(song_data.get_song_data())
-
-    
+        self.prediction = song_data.get_song_data()
+        
         self.analyzed = True
 
         return song_data

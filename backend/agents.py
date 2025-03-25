@@ -16,8 +16,9 @@ class Agent(ABC):
 
 
     def __init__(self):
-        self.__prediction = {} 
+        self._prediction = {} 
         self.analyzed = False # state representing whether the data has been analyzed
+
 
     @abstractmethod
     def analyze_data(self, data):
@@ -29,23 +30,9 @@ class Agent(ABC):
         
         """
         pass
-    
 
-    def set_prediction(self, prediction: dict):
-        """
-        Sets the prediction data by unpacking the dictionary.
-
-        Args:
-            prediction (dict): A dictionary containing prediction results.
-        """
-        if not isinstance(prediction, dict):
-            raise TypeError("Prediction must be a dictionary")
-        
-        self.__prediction = {**prediction}  # Unpacks and sets the dictionary
-        self.analyzed = True
-
-
-    def get_partial_solution(self):
+    @property
+    def prediction(self) -> dict:
         """
         Submit the partial solution to the blackboard.
 
@@ -58,4 +45,22 @@ class Agent(ABC):
         if not self.analyze_data:
             raise ValueError("Data has not been analyzed yet.")
         
-        return self.__prediction
+        return self._prediction
+    
+
+    @prediction.setter
+    def prediction(self, prediction: dict):
+        """
+        Sets the prediction data by unpacking the dictionary.
+
+        Args:
+            prediction (dict): A dictionary containing prediction results.
+        """
+        if not isinstance(prediction, dict):
+            raise TypeError("Prediction must be a dictionary")
+        
+        self._prediction = {**prediction}  # Unpacks and sets the dictionary
+        self.analyzed = True
+
+
+

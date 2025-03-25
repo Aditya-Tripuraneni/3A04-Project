@@ -29,7 +29,8 @@ class LyricalAnalyzer(Agent):
         song_data = lyrical_finder.identify_song()
         
         # Store the identified song data
-        self.set_prediction(song_data.get_song_data())
+        # self.prediction(song_data.get_song_data())
+        self.prediction = song_data.get_song_data()
 
         self.analyzed = True
 
@@ -95,10 +96,3 @@ And last night you were in my room
 And now my bedsheets smell like you
 Every day discovering something brand new
 """
-
-# lyric_data = Lyrics(stored_lyrics)
-
-# lyrical_agent = LyricalAnalyzer()
-
-# lyrical_agent.analyze_data(lyric_data)
-# # print(f"Confidence Score: {lyrical_agent.get_confidence_score()}")

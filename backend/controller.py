@@ -1,8 +1,8 @@
 from audio import Audio
+from description import Description
 from blackboard import BlackBoard
 from blackboardkeys import FactKeys, PartialSolutionKeys
 from data import Data
-from description import Description
 from lyricAnalyzer import LyricalAnalyzer
 from audioAnalyzer import AudioAnalyzer
 from descriptionAnalyzer import DescriptionAnalyzer
@@ -11,10 +11,10 @@ from lyrics import Lyrics
 
 class Controller:
     def __init__(self):
-        self.__blackboard = BlackBoard()
-        self.__lyrical_analyzer = LyricalAnalyzer()
-        self.__audio_analyzer = AudioAnalyzer()
-        self.__description_analyzer = DescriptionAnalyzer()
+        self.blackboard = BlackBoard()
+        self.lyrical_analyzer = LyricalAnalyzer()
+        self.audio_analyzer = AudioAnalyzer()
+        self.description_analyzer = DescriptionAnalyzer()
 
     
     def analyze_data(self, data: Data):
@@ -27,24 +27,23 @@ class Controller:
         """
         if isinstance(data, Audio):
             # Handle audio data
-            song_prediction = self.__audio_analyzer.analyze_data(data)
+            song_prediction = self.audio_analyzer.analyze_data(data)
             audio_file = data.get_audio_data()
-            self.__blackboard.write_fact(FactKeys.AUDIO_FILE, audio_file)
-            self.__blackboard.write_partial_solution(PartialSolutionKeys.AUDIO_RESULT, song_prediction)
+            self.blackboard.write_fact(FactKeys.AUDIO_FILE, audio_file)
+            self.blackboard.write_partial_solution(PartialSolutionKeys.AUDIO_RESULT, song_prediction)
 
         elif isinstance(data, Lyrics):
             # Handle lyrics data
-            song_prediction = self.__lyrical_analyzer.analyze_data(data)
+            song_prediction = self.lyrical_analyzer.analyze_data(data)
             lyrics = data.get_lyrics_data()
-            self.__blackboard.write_fact(FactKeys.LYRICAL_TEXT, lyrics)
-            self.__blackboard.write_partial_solution(PartialSolutionKeys.LYRICAL_RESULT, song_prediction)
-            x = self.__blackboard.read_partial_solution(PartialSolutionKeys.LYRICAL_RESULT)
+            self.blackboard.write_fact(FactKeys.LYRICAL_TEXT, lyrics)
+            self.blackboard.write_partial_solution(PartialSolutionKeys.LYRICAL_RESULT, song_prediction)
 
         elif isinstance(data, Data):
             # Handle description data (generic Data type or specific subclass)
-            song_prediction = self.__description_analyzer.analyze_data(data)
-            self.__blackboard.write_fact(FactKeys.DESCRIPTION_TEXT, data)
-            self.__blackboard.write_partial_solution(PartialSolutionKeys.DESCRIPTION_RESULT, song_prediction)
+            song_prediction = self.description_analyzer.analyze_data(data)
+            self.blackboard.write_fact(FactKeys.DESCRIPTION_TEXT, data)
+            self.blackboard.write_partial_solution(PartialSolutionKeys.DESCRIPTION_RESULT, song_prediction)
 
         else:
             raise ValueError("Unsupported data type provided for analysis.")
@@ -57,7 +56,7 @@ class Controller:
         Returns:
             Song: The predicted song with the highest confidence score.
         """
-        return self.__blackboard.finalize_solution()
+        return self.blackboard.finalize_solution()
     
    
     
@@ -126,13 +125,10 @@ Every day discovering something brand new
 # controller = Controller()
 
 # controller.analyze_data(Lyrics(stored_lyrics))
-# controller.analyze_data(Audio("XYZ.mp3"))
 
 # res_ting = controller.finalize_solution()
 # print(res_ting.get_song_data())
 
-# lyrical_prediction  = controller.__blackboard.read_partial_solution(PartialSolutionKeys.LYRICAL_RESULT)
-# print(lyrical_prediction.get_song_data())
 # # Example usage
 # sample_description = Description(
 #     artist="Justin Timberlake",
@@ -147,9 +143,5 @@ Every day discovering something brand new
 # )
 
 # controller.analyze_data(sample_description)
-# desc_prediction = controller.__blackboard.read_partial_solution(PartialSolutionKeys.DESCRIPTION_RESULT)
-# print(desc_prediction.get_song_data())
-
-# controller.analyze_data(Audio("ABC.mp3"))
-# audio_prediction = controller.__blackboard.read_partial_solution(PartialSolutionKeys.AUDIO_RESULT)
-# print(audio_prediction.get_song_data())
+# res_2 = controller.finalize_solution()
+# print(res_2.get_song_data())

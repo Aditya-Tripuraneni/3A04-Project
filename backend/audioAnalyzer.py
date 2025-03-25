@@ -15,7 +15,7 @@ class AudioAnalyzer(Agent):
         song_data = audio_finder.identify_song()
 
         # store the identified song data
-        self.set_prediction(song_data.get_song_data())
+        self.prediction = song_data.get_song_data()
 
         self.analyzed = True
 
@@ -24,14 +24,5 @@ class AudioAnalyzer(Agent):
 
 
 
-# Example usage
-# sample_audio = Audio("ABC.mp3")
-# audio_analyzer = AudioAnalyzer()
 
-# audio_analyzer.analyze_data(sample_audio)
-# res = audio_analyzer.get_partial_solution()
-# print(res)
-# print(audio_analyzer.get_confidence_score())
-
-    
 
