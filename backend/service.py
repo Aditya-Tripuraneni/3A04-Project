@@ -4,7 +4,6 @@ from description import Description
 from lyrics import Lyrics
 from models import LyricsRequest, DescriptionRequest, AudioRequest, SongPredictionResponse
 from fastapi import FastAPI 
-import logging
 
 app = FastAPI()
 

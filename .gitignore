@@ -2,6 +2,9 @@ __pycache__/
 
 .venv/
 
+# ignore credentials
+backend/songsnap-454217-95c7360a899c.json
+
 # dependencies
 node_modules/
 
