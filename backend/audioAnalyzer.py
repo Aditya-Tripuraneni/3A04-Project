@@ -15,11 +15,12 @@ class AudioAnalyzer(Agent):
         song_data = audio_finder.identify_song()
 
         # store the identified song data
-        self.prediction = song_data.get_song_data()
-
-        self.analyzed = True
-
-        return song_data
+        try:
+            self.prediction = song_data.get_song_data()
+            self.analyzed = True
+            return song_data
+        except:
+            raise TypeError("Prediction only accepts type dict.")
 
 
 

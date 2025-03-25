@@ -31,6 +31,7 @@ class Agent(ABC):
         """
         pass
 
+
     @property
     def prediction(self) -> dict:
         """
@@ -42,7 +43,7 @@ class Agent(ABC):
 
         """
 
-        if not self.analyze_data:
+        if not self.analyzed:
             raise ValueError("Data has not been analyzed yet.")
         
         return self._prediction

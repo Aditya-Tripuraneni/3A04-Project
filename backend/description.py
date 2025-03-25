@@ -40,10 +40,7 @@ class Description(Data):
         self.data["language"] = self.language if self.language else "Unknown"
         self.data["region"] = self.region if self.region else "Unknown"
         self.data["featuredArtist"] = self.featuredArtist if self.featuredArtist else "Unknown" 
-        """
-        Need something in front end to ensure that if there is no featured artist, the user must say so. Maybe use a dropdown menu for some 
-        of the fields?
-        """
+
 
 
     def get_description_data(self):

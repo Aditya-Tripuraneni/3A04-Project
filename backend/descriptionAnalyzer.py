@@ -15,29 +15,18 @@ class DescriptionAnalyzer(Agent):
         description_finder = DescriptionFinder(data)
         song_data = description_finder.identify_song()
 
-        # store the identified song data
-        self.prediction = song_data.get_song_data()
-        
-        self.analyzed = True
+        try:
+            # store the identified song data
+            self.prediction = song_data.get_song_data()
+            self.analyzed = True
+            return song_data
+        except:
+            raise TypeError("Prediction only accepts type dict.")
 
-        return song_data
 
 
 
 # Example usage
-sample_description = Description(
-    artist="Justin Timberlake",
-    genre="Pop / R&B",
-    year="2013",
-    albumName="The 20/20 Experience",
-    mood="Emotional, Romantic, Reflective",
-    genderOfArtist="Male",
-    language="English",
-    region="North America",
-    featuredArtist="None"
-)
 
 
-# description_agent = DescriptionAnalyzer()
-# description_agent.analyze_data(sample_description)
     

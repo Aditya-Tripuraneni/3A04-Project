@@ -27,14 +27,14 @@ class LyricalAnalyzer(Agent):
         """
         lyrical_finder = LyricalFinder(data)
         song_data = lyrical_finder.identify_song()
-        
-        # Store the identified song data
-        # self.prediction(song_data.get_song_data())
-        self.prediction = song_data.get_song_data()
 
-        self.analyzed = True
-
-        return song_data
+        try:
+            # Store the identified song data
+            self.prediction = song_data.get_song_data()
+            self.analyzed = True
+            return song_data
+        except:
+            raise TypeError("Prediction only accepts type dict.")
 
     
    
