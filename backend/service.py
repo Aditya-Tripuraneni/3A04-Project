@@ -1,7 +1,7 @@
-from controller import Controller
-from description import Description
-from lyrics import Lyrics
-from models import LyricsRequest, DescriptionRequest, AudioRequest, SongPredictionResponse
+from .controller import Controller
+from .description import Description
+from .lyrics import Lyrics
+from .models import LyricsRequest, DescriptionRequest, AudioRequest, SongPredictionResponse
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
