@@ -1,3 +1,4 @@
+import logging
 from audio import Audio
 from controller import Controller
 from description import Description
@@ -12,9 +13,9 @@ app = FastAPI()
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*", "exp://6ejlq6c-anonymous-8081.exp.direct", "http://localhost:8081", "http://localhost:8000"],
+    allow_origins=["exp://6ejlq6c-anonymous-8081.exp.direct", "http://localhost:8081", "http://localhost:8000", "http://172.26.105.189:8000"],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -28,6 +29,9 @@ async def analyze_song(request: AnalyzeRequest):
     Analyzes the provided song data (lyrics, audio, description) and returns the predicted song,
     artist, and confidence score.
     """
+    # print("Received /analyze_song request")
+    # print(f"Request headers: {request.headers}")
+    # print(f"Request body: {request.model_dump()}")
     try:
         controller = Controller()
 

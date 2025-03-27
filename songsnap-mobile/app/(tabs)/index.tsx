@@ -49,7 +49,8 @@ export default function TabOneScreen() {
   // Function to determine the correct API URL
   const getApiUrl = () => {
     // For Expo Go (tunnel mode) and web browser
-    return 'http://localhost:8000';
+    //http://172.26.105.189:8000
+    return 'https://shielded-river-59970-07472bbe3ec3.herokuapp.com/';
   };
 
   const selectAnalyzer = (analyzerName: string) => {
