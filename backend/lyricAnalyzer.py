@@ -1,7 +1,7 @@
-from agents import Agent
-from lyricalFinder import LyricalFinder
-from data import Data
-from song import Song
+from .agents import Agent
+from .lyricalFinder import LyricalFinder
+from .data import Data
+from .song import Song
 
 
 class LyricalAnalyzer(Agent):

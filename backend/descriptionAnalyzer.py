@@ -1,8 +1,8 @@
-from agents import Agent
-from data import Data
-from naturalLanguageProcessor import DescriptionFinder
-from description import Description
-from song import Song
+from .agents import Agent
+from .data import Data
+from .naturalLanguageProcessor import DescriptionFinder
+from .description import Description
+from .song import Song
 
 
 class DescriptionAnalyzer(Agent):

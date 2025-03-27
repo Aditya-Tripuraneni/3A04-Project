@@ -1,6 +1,6 @@
-from song import Song
-from blackboardkeys import FactKeys, PartialSolutionKeys
-from data import Data
+from .song import Song
+from .blackboardkeys import FactKeys, PartialSolutionKeys
+from .data import Data
 
 
 class BlackBoard:

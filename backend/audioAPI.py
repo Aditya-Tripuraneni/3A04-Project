@@ -1,8 +1,8 @@
-from audio import Audio
-from data import Data
-from audioModel import classify_song
-from song import Song
-from songIdentifier import SongIdentifier 
+from .audio import Audio
+from .data import Data
+from .audioModel import classify_song
+from .song import Song
+from .songIdentifier import SongIdentifier 
 
 
 class AudioIdentifier(SongIdentifier):
