@@ -2,6 +2,8 @@ alabaster==0.7.12
 anaconda-client==1.7.2
 anaconda-navigator==1.10.0
 anaconda-project==0.8.3
+annotated-types==0.7.0
+anyio==4.5.2
 argh==0.26.2
 argon2-cffi @ file:///tmp/build/80754af9/argon2-cffi_1596828493937/work
 asn1crypto @ file:///tmp/build/80754af9/asn1crypto_1596577642040/work
@@ -49,6 +51,8 @@ distributed @ file:///tmp/build/80754af9/distributed_1605066520644/work
 docutils==0.16
 entrypoints==0.3
 et-xmlfile==1.0.1
+exceptiongroup==1.2.2
+fastapi==0.115.12
 fastcache==1.1.0
 filelock==3.0.12
 flake8 @ file:///tmp/build/80754af9/flake8_1601911421857/work
@@ -59,6 +63,7 @@ gevent @ file:///tmp/build/80754af9/gevent_1601397537062/work
 glob2==0.7
 gmpy2==2.0.8
 greenlet @ file:///tmp/build/80754af9/greenlet_1600874013538/work
+h11==0.14.0
 h5py==2.10.0
 HeapDict==1.0.1
 html5lib @ file:///tmp/build/80754af9/html5lib_1593446221756/work
@@ -147,6 +152,8 @@ pycodestyle==2.6.0
 pycosat==0.6.3
 pycparser @ file:///tmp/build/80754af9/pycparser_1594388511720/work
 pycurl==7.43.0.6
+pydantic==2.10.6
+pydantic-core==2.27.2
 pydocstyle @ file:///tmp/build/80754af9/pydocstyle_1598885001695/work
 pyflakes==2.2.0
 Pygments @ file:///tmp/build/80754af9/pygments_1604103097372/work
@@ -160,6 +167,7 @@ pytest==0.0.0
 python-dateutil==2.8.1
 python-jsonrpc-server @ file:///tmp/build/80754af9/python-jsonrpc-server_1600278539111/work
 python-language-server @ file:///tmp/build/80754af9/python-language-server_1600454544709/work
+python-multipart==0.0.20
 pytz==2020.1
 PyWavelets @ file:///tmp/build/80754af9/pywavelets_1601658317819/work
 pyxdg @ file:///tmp/build/80754af9/pyxdg_1603822279816/work
@@ -184,6 +192,7 @@ simplegeneric==0.8.1
 singledispatch @ file:///tmp/build/80754af9/singledispatch_1602523705405/work
 sip==4.19.13
 six @ file:///tmp/build/80754af9/six_1605205327372/work
+sniffio==1.3.1
 snowballstemmer==2.0.0
 sortedcollections==1.2.1
 sortedcontainers==2.2.2
@@ -199,6 +208,7 @@ sphinxcontrib-websupport @ file:///tmp/build/80754af9/sphinxcontrib-websupport_1
 spyder @ file:///tmp/build/80754af9/spyder_1599056981321/work
 spyder-kernels @ file:///tmp/build/80754af9/spyder-kernels_1599056754858/work
 SQLAlchemy @ file:///tmp/build/80754af9/sqlalchemy_1603397987316/work
+starlette==0.44.0
 statsmodels @ file:///tmp/build/80754af9/statsmodels_1602280205159/work
 sympy @ file:///tmp/build/80754af9/sympy_1605119542615/work
 tables==3.6.1
@@ -212,10 +222,12 @@ toolz @ file:///tmp/build/80754af9/toolz_1601054250827/work
 tornado==6.0.4
 tqdm @ file:///tmp/build/80754af9/tqdm_1602185206534/work
 traitlets @ file:///tmp/build/80754af9/traitlets_1602787416690/work
-typing-extensions @ file:///tmp/build/80754af9/typing_extensions_1598376058250/work
+typing-extensions==4.12.2
 ujson @ file:///tmp/build/80754af9/ujson_1602523317881/work
 unicodecsv==0.14.1
 urllib3 @ file:///tmp/build/80754af9/urllib3_1603305693037/work
+uv==0.6.9
+uvicorn==0.33.0
 watchdog @ file:///tmp/build/80754af9/watchdog_1593447344699/work
 wcwidth @ file:///tmp/build/80754af9/wcwidth_1593447189090/work
 webencodings==0.5.1
