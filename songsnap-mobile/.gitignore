@@ -1,9 +1,4 @@
-__pycache__/
-
-.venv/
-
-# ignore credentials
-backend/songsnap-454217-95c7360a899c.json
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
 # dependencies
 node_modules/
@@ -39,5 +34,3 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
-
-app-example
