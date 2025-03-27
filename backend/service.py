@@ -1,5 +1,3 @@
-import logging
-from audio import Audio
 from controller import Controller
 from description import Description
 from lyrics import Lyrics
