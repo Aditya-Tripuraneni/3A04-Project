@@ -50,7 +50,7 @@ export default function TabOneScreen() {
   const getApiUrl = () => {
     // For Expo Go (tunnel mode) and web browser
     //http://172.26.105.189:8000
-    return 'https://shielded-river-59970-07472bbe3ec3.herokuapp.com/';
+    return 'https://song-snap-3a04-4c786329b520.herokuapp.com';
   };
 
   const selectAnalyzer = (analyzerName: string) => {
