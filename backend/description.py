@@ -1,4 +1,4 @@
-from data import Data
+from .data import Data
 
 class Description(Data):
     def __init__(

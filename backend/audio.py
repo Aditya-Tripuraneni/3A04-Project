@@ -1,5 +1,5 @@
 
-from data import Data
+from .data import Data
 
 
 class Audio(Data):
