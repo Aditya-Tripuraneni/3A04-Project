@@ -1,6 +1,6 @@
 import vertexai
 from vertexai.generative_models import GenerativeModel
-from configurations import SAFTEY_SETTINGS, GENERATION_CONFIG
+from .configurations import SAFTEY_SETTINGS, GENERATION_CONFIG
 
 # I need a seperate model that can send audio files generate the code for this
 
