@@ -1,12 +1,12 @@
-from audio import Audio
-from description import Description
-from blackboard import BlackBoard
-from blackboardkeys import FactKeys, PartialSolutionKeys
-from data import Data
-from lyricAnalyzer import LyricalAnalyzer
-from audioAnalyzer import AudioAnalyzer
-from descriptionAnalyzer import DescriptionAnalyzer
-from lyrics import Lyrics
+from .audio import Audio
+from .description import Description
+from .blackboard import BlackBoard
+from .blackboardkeys import FactKeys, PartialSolutionKeys
+from .data import Data
+from .lyricAnalyzer import LyricalAnalyzer
+from .audioAnalyzer import AudioAnalyzer
+from .descriptionAnalyzer import DescriptionAnalyzer
+from .lyrics import Lyrics
 
 
 class Controller:

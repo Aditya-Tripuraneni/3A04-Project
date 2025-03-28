@@ -1,8 +1,8 @@
-from description import Description
-from songIdentifier import SongIdentifier
-from textModel import multiturn_generate_content
-from song import Song
-from data import Data
+from .description import Description
+from .songIdentifier import SongIdentifier
+from .textModel import multiturn_generate_content
+from .song import Song
+from .data import Data
 from jsonpath_ng import parse
 
 class DescriptionFinder(SongIdentifier):

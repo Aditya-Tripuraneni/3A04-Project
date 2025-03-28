@@ -1,9 +1,7 @@
-import logging
-from audio import Audio
-from controller import Controller
-from description import Description
-from lyrics import Lyrics
-from models import LyricsRequest, DescriptionRequest, AudioRequest, SongPredictionResponse
+from .controller import Controller
+from .description import Description
+from .lyrics import Lyrics
+from .models import LyricsRequest, DescriptionRequest, AudioRequest, SongPredictionResponse
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -13,7 +11,7 @@ app = FastAPI()
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["exp://6ejlq6c-anonymous-8081.exp.direct", "http://localhost:8081", "http://localhost:8000", "http://172.26.105.189:8000"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],

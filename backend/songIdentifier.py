@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from data import Data
+from .data import Data
 
 
 class SongIdentifier(ABC):
