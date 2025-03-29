@@ -43,6 +43,7 @@ async def analyze_song(request: AnalyzeRequest):
             controller.analyze_data(description)
 
         if request.audio_request:
+            print(f"Audio request received {request.audio_request.audio_file}")
             logger.debug(f"Audio file: {request.audio_request.audio_file}")
             audio = Audio(request.audio_request.audio_file)
             controller.analyze_data(audio)
