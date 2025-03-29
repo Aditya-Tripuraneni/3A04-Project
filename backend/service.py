@@ -11,16 +11,12 @@ import base64
 import os
 import tempfile
 
+import logging
 
-# audio_file_path = "ABC.mp3"  # Replace with your audio file path
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
-# with open(audio_file_path, "rb") as audio_file:
-#     base64_audio = base64.b64encode(audio_file.read()).decode('utf-8')
-
-# print(base64_audio)
-
-
-app = FastAPI()
+app = FastAPI(debug=True)
 
 # Add CORS middleware
 app.add_middleware(
@@ -71,5 +67,7 @@ async def analyze_song(request: AnalyzeRequest):
         return SongPredictionResponse(**final_song_data)
     except Exception as e:
         traceback.print_exc()
+        logger.exception("An error occurred while processing the request")
+        
         raise HTTPException(status_code=500, detail=str(e))
 
