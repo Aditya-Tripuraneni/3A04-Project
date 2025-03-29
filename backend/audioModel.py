@@ -1,29 +1,27 @@
 import vertexai
 from google.oauth2 import service_account
-from google import genai 
+from google import genai
 import os
 import json
 from google.genai import types
 
 
-
 def classify_song(audio_file_path):
-    # Get the path to the credentials file from the environment variable
-    credentials_path = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
-    print("GOOGLE_APPLICATION_CREDENTIALS:", credentials_path)
+    # Load credentials from the environment variable
+    credentials_json = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS_JSON")
+    if not credentials_json:
+        raise ValueError("GOOGLE_APPLICATION_CREDENTIALS_JSON environment variable not set.")
 
-    # Load the credentials from the file
-    if credentials_path and os.path.exists(credentials_path):
-        try:
-            with open(credentials_path, "r") as f:
-                credentials_info = json.load(f)  # Read and parse the JSON file
-                credentials = service_account.Credentials.from_service_account_info(credentials_info)
-        except json.JSONDecodeError as e:
-            print(f"Error decoding JSON: {e}")
-            raise  # Re-raise the exception to prevent the app from continuing
-    else:
-        print("GOOGLE_APPLICATION_CREDENTIALS environment variable not set or file does not exist.")
-        raise ValueError("GOOGLE_APPLICATION_CREDENTIALS environment variable not set or file does not exist.")
+    try:
+        # Parse the JSON string into a dictionary
+        credentials_info = json.loads(credentials_json)
+        credentials = service_account.Credentials.from_service_account_info(
+            credentials_info,
+            scopes=["https://www.googleapis.com/auth/cloud-platform"]  # Required scope
+        )
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON credentials: {e}")
+        raise
 
     # Initialize the genai.Client with credentials
     client = genai.Client(
