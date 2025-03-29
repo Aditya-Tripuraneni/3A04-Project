@@ -10,10 +10,17 @@ from fastapi.middleware.cors import CORSMiddleware
 import base64
 import os
 import tempfile
+import sys
 
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.StreamHandler(sys.stdout)
+    ]
+)
 logger = logging.getLogger(__name__)
 
 app = FastAPI(debug=True)

@@ -41,7 +41,7 @@ yarn-error.*
 *.tsbuildinfo
 
 
-# music or videos
-.mp3
+# Ignore tester script
+backend/tester.py
 
 app-example
