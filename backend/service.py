@@ -2,10 +2,14 @@ from .controller import Controller
 from .description import Description
 from .lyrics import Lyrics
 from .audio import Audio
-from .models import LyricsRequest, DescriptionRequest, AudioRequest, SongPredictionResponse
+from .models import AnalyzeRequest, SongPredictionResponse
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+import logging 
+
+logging.basicConfig(level = logging.DEBUG)
+logger = logging.getLogger(__name__)
+
 
 app = FastAPI()
 
@@ -18,10 +22,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class AnalyzeRequest(BaseModel):
-    lyrics_request: LyricsRequest | None = None
-    audio_request: AudioRequest | None = None
-    description_request: DescriptionRequest | None = None
+
 
 @app.post("/analyze_song")
 async def analyze_song(request: AnalyzeRequest):
@@ -29,9 +30,7 @@ async def analyze_song(request: AnalyzeRequest):
     Analyzes the provided song data (lyrics, audio, description) and returns the predicted song,
     artist, and confidence score.
     """
-    # print("Received /analyze_song request")
-    # print(f"Request headers: {request.headers}")
-    # print(f"Request body: {request.model_dump()}")
+
     try:
         controller = Controller()
 
@@ -44,6 +43,7 @@ async def analyze_song(request: AnalyzeRequest):
             controller.analyze_data(description)
 
         if request.audio_request:
+            logger.debug(f"Audio file: {request.audio_request.audio_file}")
             audio = Audio(request.audio_request.audio_file)
             controller.analyze_data(audio)
 

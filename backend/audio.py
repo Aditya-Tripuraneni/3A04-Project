@@ -1,13 +1,11 @@
-
 from .data import Data
 
-
 class Audio(Data):
-    def __init__(self, audio_file: str):
-        self.audio_file = audio_file
-    
-    def _store_data():
+    def __init__(self, base64_audio: str):
+        self.base64_audio = base64_audio
+
+    def _store_data(self):
         pass
 
     def get_audio_data(self) -> str:
-        return self.audio_file
+        return self.base64_audio
