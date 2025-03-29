@@ -44,6 +44,8 @@ async def analyze_song(request: AnalyzeRequest):
     """
 
     try:
+        logger.info("Starting /analyze_song endpoint")
+
         controller = Controller()
 
         if request.lyrics_request:
@@ -55,21 +57,29 @@ async def analyze_song(request: AnalyzeRequest):
             controller.analyze_data(description)
 
         if request.audio_request:
+            logging.info("Processing audio request")
             audio_bytes = base64.b64decode(request.audio_request.audio_file)
-            print("YALL I GOT A HIT!!!!!")
+            logging.info("Audio bytes decoded successfully")
             
             with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_file:
                 temp_file.write(audio_bytes)
                 tempfile_path = temp_file.name
+                logger.info(f"Temporary audio file created at: {tempfile_path}")
         
             try:
                 audio = Audio(tempfile_path)
+                logging.info("Audio object created successfully")
                 controller.analyze_data(audio)
+                logging.info("Audio data analyzed successfully")
             finally:
-                os.remove(tempfile_path)
+                if os.path.exists(tempfile_path):
+                    os.remove(tempfile_path)
+                    logger.info(f"Temporary audio file deleted: {tempfile_path}")
 
+        logger.info("Finalizing solution")
         final_song = controller.finalize_solution()
         final_song_data = final_song.get_song_data()
+        logger.info("Returning final song data")
 
         return SongPredictionResponse(**final_song_data)
     except Exception as e:
