@@ -9,10 +9,10 @@ class AudioIdentifier(SongIdentifier):
         self.audio_data = data
 
     def identify_song(self) -> Data: 
-        base64_audio = self.audio_data.get_audio_data()
+        audio_file_path = self.audio_data.get_audio_data()
 
         # Use model to identify song based on base64-encoded audio
-        song_data = classify_song(base64_audio)
+        song_data = classify_song(audio_file_path)
 
         # Song result is in the form "Name: XXX Artist: YYY Confidence: ZZZ"
         song_info = song_data.split(' Confidence:')

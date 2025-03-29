@@ -1,3 +1,4 @@
+import traceback
 from .controller import Controller
 from .description import Description
 from .lyrics import Lyrics
@@ -5,10 +6,18 @@ from .audio import Audio
 from .models import AnalyzeRequest, SongPredictionResponse
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-import logging 
 
-logging.basicConfig(level = logging.DEBUG)
-logger = logging.getLogger(__name__)
+import base64
+import os
+import tempfile
+
+
+# audio_file_path = "ABC.mp3"  # Replace with your audio file path
+
+# with open(audio_file_path, "rb") as audio_file:
+#     base64_audio = base64.b64encode(audio_file.read()).decode('utf-8')
+
+# print(base64_audio)
 
 
 app = FastAPI()
@@ -43,15 +52,24 @@ async def analyze_song(request: AnalyzeRequest):
             controller.analyze_data(description)
 
         if request.audio_request:
-            print(f"Audio request received {request.audio_request.audio_file}")
-            logger.debug(f"Audio file: {request.audio_request.audio_file}")
-            audio = Audio(request.audio_request.audio_file)
-            controller.analyze_data(audio)
+            audio_bytes = base64.b64decode(request.audio_request.audio_file)
+            print("YALL I GOT A HIT!!!!!")
+            
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_file:
+                temp_file.write(audio_bytes)
+                tempfile_path = temp_file.name
+        
+            try:
+                audio = Audio(tempfile_path)
+                controller.analyze_data(audio)
+            finally:
+                os.remove(tempfile_path)
 
         final_song = controller.finalize_solution()
         final_song_data = final_song.get_song_data()
 
         return SongPredictionResponse(**final_song_data)
     except Exception as e:
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 

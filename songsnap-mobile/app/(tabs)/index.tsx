@@ -143,7 +143,7 @@ export default function TabOneScreen() {
       // Add audio data if selected
       if (selectedAnalyzers.includes('audio') && audioFile) {
         requestData.audio_request = {
-          base64_audio: audioFile, // Send base64-encoded audio
+          audio_file: audioFile, // Send base64-encoded audio
         };
       }
 

@@ -40,4 +40,8 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
+
+# music or videos
+.mp3
+
 app-example

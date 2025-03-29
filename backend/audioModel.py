@@ -1,17 +1,45 @@
-from google import genai
+import vertexai
+from google.oauth2 import service_account
+from google import genai 
+import os
+import json
 from google.genai import types
-import base64
 
-def classify_song(base64_audio):
+
+
+def classify_song(audio_file_path):
+    # Get the path to the credentials file from the environment variable
+    credentials_path = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+    print("GOOGLE_APPLICATION_CREDENTIALS:", credentials_path)
+
+    # Load the credentials from the file
+    if credentials_path and os.path.exists(credentials_path):
+        try:
+            with open(credentials_path, "r") as f:
+                credentials_info = json.load(f)  # Read and parse the JSON file
+                credentials = service_account.Credentials.from_service_account_info(credentials_info)
+        except json.JSONDecodeError as e:
+            print(f"Error decoding JSON: {e}")
+            raise  # Re-raise the exception to prevent the app from continuing
+    else:
+        print("GOOGLE_APPLICATION_CREDENTIALS environment variable not set or file does not exist.")
+        raise ValueError("GOOGLE_APPLICATION_CREDENTIALS environment variable not set or file does not exist.")
+
+    # Initialize the genai.Client with credentials
     client = genai.Client(
         vertexai=True,
         project="songsnap-454217",
         location="us-central1",
+        credentials=credentials
     )
 
-    # Convert base64 audio data to Part object
+    # Read the audio file from disk
+    with open(audio_file_path, "rb") as audio_file:
+        audio_bytes = audio_file.read()
+
+    # Convert audio bytes to Part object
     audio_part = types.Part.from_bytes(
-        data=base64.b64decode(base64_audio),
+        data=audio_bytes,
         mime_type="audio/mpeg"  # Adjust the MIME type if needed
     )
 
@@ -44,6 +72,7 @@ def classify_song(base64_audio):
         ],
     )
 
+    # Use the client to generate content
     client_models = client.models.generate_content_stream(
         model=model,
         contents=contents,
@@ -56,5 +85,3 @@ def classify_song(base64_audio):
 
     # Song result is in the form "Name: XXX Artist: YYY Confidence: ZZZ"
     return response_text
-
-
