@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as DocumentPicker from 'expo-document-picker';
 
 interface Description {
   artist: string;
@@ -31,6 +32,7 @@ interface AnalysisResult {
 export default function TabOneScreen() {
   const [selectedAnalyzers, setSelectedAnalyzers] = useState<string[]>([]);
   const [lyrics, setLyrics] = useState('');
+  const [audioFile, setAudioFile] = useState('');
   const [description, setDescription] = useState<Description>({
     artist: '',
     genre: '',
@@ -70,6 +72,23 @@ export default function TabOneScreen() {
     }));
   };
 
+  const pickAudioFile = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: 'audio/*',
+      });
+
+      if (result.canceled) {
+        return;
+      }
+
+      setAudioFile(result.assets[0].uri); // Storing selected file
+    } catch (err) {
+      console.error('Audio file selection error:', err);
+      setError('Failed to select audio file.');
+    }
+  };
+
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
@@ -97,6 +116,15 @@ export default function TabOneScreen() {
           featuredArtist: description.featuredArtist
         };
       }
+
+      if (selectedAnalyzers.includes('audio') && audioFile) {
+        const file = {
+            uri: audioFile,
+            name: 'audio_file.mp3', // You may need to change this to reflect the actual file type
+            type: 'audio/mpeg', // Adjust MIME type if needed
+        };
+        requestData.audio_request = file;
+    }
 
       const API_URL = getApiUrl();
       console.log('Starting request...');
@@ -171,6 +199,16 @@ export default function TabOneScreen() {
           <TouchableOpacity
             style={[
               styles.analyzerButton,
+              selectedAnalyzers.includes('audio') && styles.selectedButton,
+            ]}
+            onPress={() => selectAnalyzer('audio')}
+          >
+            <Text style={styles.buttonText}>Audio Analyzer</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.analyzerButton,
               selectedAnalyzers.includes('description') && styles.selectedButton,
             ]}
             onPress={() => selectAnalyzer('description')}
@@ -191,7 +229,19 @@ export default function TabOneScreen() {
                 value={lyrics}
                 onChangeText={setLyrics}
                 placeholder="Paste your lyrics here..."
+                placeholderTextColor="#888"
               />
+            </View>
+          )}
+
+          {selectedAnalyzers.includes('audio') && (
+            <View style={styles.inputSection}>
+              <Text style={styles.sectionTitle}>Input Audio File</Text>
+              <TouchableOpacity style={styles.button} onPress={pickAudioFile}>
+                <Text style={styles.buttonText}>Pick an Audio File</Text>
+              </TouchableOpacity>
+
+              {audioFile && <Text style={styles.fileName}>Selected file: {audioFile.split('/').pop()}</Text>}
             </View>
           )}
 
@@ -205,6 +255,7 @@ export default function TabOneScreen() {
                   value={value}
                   onChangeText={(text) => updateDescription(field as keyof Description, text)}
                   placeholder={`Enter ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`}
+                  placeholderTextColor="#888"
                 />
               ))}
             </View>
@@ -381,5 +432,19 @@ const styles = StyleSheet.create({
   resultLabel: {
     fontWeight: '600',
     color: '#2C3E50',
+  },
+  button: {
+    backgroundColor: '#4A90E2',
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 10,
+    marginVertical: 10,
+    width: '80%',
+    alignItems: 'center',
+  },
+  fileName: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#888',
   },
 });

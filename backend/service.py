@@ -1,6 +1,7 @@
 from .controller import Controller
 from .description import Description
 from .lyrics import Lyrics
+from .audio import Audio
 from .models import LyricsRequest, DescriptionRequest, AudioRequest, SongPredictionResponse
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -19,6 +20,7 @@ app.add_middleware(
 
 class AnalyzeRequest(BaseModel):
     lyrics_request: LyricsRequest | None = None
+    audio_request: AudioRequest | None = None
     description_request: DescriptionRequest | None = None
 
 @app.post("/analyze_song")
@@ -41,10 +43,9 @@ async def analyze_song(request: AnalyzeRequest):
             description = Description(**request.description_request.model_dump())
             controller.analyze_data(description)
 
-        # if audio_request:
-            #     audio = Audio(audio_request.audio_file)
-            #     # analyze the audio data
-            #     controller.analyze_data(audio)
+        if request.audio_request:
+            audio = Audio(request.audio_request.audio_file)
+            controller.analyze_data(audio)
 
         final_song = controller.finalize_solution()
         final_song_data = final_song.get_song_data()
