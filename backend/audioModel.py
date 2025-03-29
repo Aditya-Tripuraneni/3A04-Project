@@ -8,9 +8,9 @@ from google.genai import types
 
 def classify_song(audio_file_path):
     # Load credentials from the environment variable
-    credentials_json = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS_JSON")
+    credentials_json = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
     if not credentials_json:
-        raise ValueError("GOOGLE_APPLICATION_CREDENTIALS_JSON environment variable not set.")
+        raise ValueError("GOOGLE_APPLICATION_CREDENTIALS environment variable not set.")
 
     try:
         # Parse the JSON string into a dictionary
