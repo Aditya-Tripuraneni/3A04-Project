@@ -1,30 +1,48 @@
+import vertexai
+from google.oauth2 import service_account
 from google import genai
+import os
+import json
 from google.genai import types
-import base64
 
 
 def classify_song(audio_file_path):
-    client = genai.Client(
-      vertexai=True,
-      project="songsnap-454217",
-      location="us-central1",
-    )
-  
-    # Read and encode the audio file
-    if audio_file_path:
-        with open(audio_file_path, "rb") as audio_file:
-            audio_data = base64.b64encode(audio_file.read()).decode('utf-8')
-    else:
-        raise FileNotFoundError("Audio file not found.")
+    # Load credentials from the environment variable
+    credentials_json = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+    if not credentials_json:
+        raise ValueError("GOOGLE_APPLICATION_CREDENTIALS environment variable not set.")
 
-    # Convert audio data to Part object
+    try:
+        # Parse the JSON string into a dictionary
+        credentials_info = json.loads(credentials_json)
+        credentials = service_account.Credentials.from_service_account_info(
+            credentials_info,
+            scopes=["https://www.googleapis.com/auth/cloud-platform"]  # Required scope
+        )
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON credentials: {e}")
+        raise
+
+    # Initialize the genai.Client with credentials
+    client = genai.Client(
+        vertexai=True,
+        project="songsnap-454217",
+        location="us-central1",
+        credentials=credentials
+    )
+
+    # Read the audio file from disk
+    with open(audio_file_path, "rb") as audio_file:
+        audio_bytes = audio_file.read()
+
+    # Convert audio bytes to Part object
     audio_part = types.Part.from_bytes(
-        data=base64.b64decode(audio_data),
-        mime_type="audio/mpeg"  # Adjust the MIME type according to the file type
+        data=audio_bytes,
+        mime_type="audio/mpeg"  # Adjust the MIME type if needed
     )
 
     model = "gemini-2.0-pro-exp-02-05"
-    
+
     contents = [
         types.Content(
             role="user",
@@ -32,12 +50,11 @@ def classify_song(audio_file_path):
                 audio_part,
                 types.Part.from_text(
                     text="""Identify the song and the artist name, and state your confidence level in logarithmic probability.\n
-                            Output the data in the form: "Name: Song Name Artist: Artist Name" Confidence: "Confidence" Do this on the same line. """
+                            Output the data in the form: "Name: Song Name Artist: Artist Name" Confidence: "Confidence" Do this on the same line."""
                 )
             ]
         )
     ]
-
 
     generate_content_config = types.GenerateContentConfig(
         temperature=1,
@@ -53,18 +70,16 @@ def classify_song(audio_file_path):
         ],
     )
 
-  
+    # Use the client to generate content
     client_models = client.models.generate_content_stream(
-                    model = model,
-                    contents = contents,
-                    config = generate_content_config,
-                )
-    
+        model=model,
+        contents=contents,
+        config=generate_content_config,
+    )
+
     response_text = ""
     for chunk in client_models:
         response_text += chunk.text if chunk.text else ""
-    
-    # song result is in the form "Name: XXX Artist: YYY" Confidence: "Confidence"
-    return response_text
 
-  
+    # Song result is in the form "Name: XXX Artist: YYY Confidence: ZZZ"
+    return response_text

@@ -9,7 +9,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as DocumentPicker from 'expo-document-picker';
 
+// Interface for the description fields
 interface Description {
   artist: string;
   genre: string;
@@ -22,6 +24,7 @@ interface Description {
   featuredArtist: string;
 }
 
+// Interface for the analysis result
 interface AnalysisResult {
   song: string;
   artist: string;
@@ -29,8 +32,11 @@ interface AnalysisResult {
 }
 
 export default function TabOneScreen() {
+  // State to manage selected analyzers (lyrics, audio, description)
   const [selectedAnalyzers, setSelectedAnalyzers] = useState<string[]>([]);
-  const [lyrics, setLyrics] = useState('');
+  const [lyrics, setLyrics] = useState(''); // State for lyrics input
+  const [audioFile, setAudioFile] = useState<string | null>(null); // State for base64-encoded audio file
+  const [audioFileName, setAudioFileName] = useState<string | null>(null); // State for audio file name
   const [description, setDescription] = useState<Description>({
     artist: '',
     genre: '',
@@ -42,27 +48,30 @@ export default function TabOneScreen() {
     region: '',
     featuredArtist: '',
   });
-  const [result, setResult] = useState<AnalysisResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [result, setResult] = useState<AnalysisResult | null>(null); // State for analysis result
+  const [error, setError] = useState<string | null>(null); // State for error messages
+  const [isLoading, setIsLoading] = useState(false); // State for loading indicator
 
   // Function to determine the correct API URL
   const getApiUrl = () => {
-    // For Expo Go (tunnel mode) and web browser
-    //http://172.26.105.189:8000
+    // Replace with your backend URL
     return 'https://song-snap-3a04-4c786329b520.herokuapp.com';
   };
 
+  // Function to toggle analyzers (lyrics, audio, description)
   const selectAnalyzer = (analyzerName: string) => {
     setSelectedAnalyzers(currentAnalyzers => {
       if (currentAnalyzers.includes(analyzerName)) {
+        // Remove analyzer if already selected
         return currentAnalyzers.filter(name => name !== analyzerName);
       } else {
+        // Add analyzer to the list
         return [...currentAnalyzers, analyzerName];
       }
     });
   };
 
+  // Function to update description fields dynamically
   const updateDescription = (field: keyof Description, value: string) => {
     setDescription(prev => ({
       ...prev,
@@ -70,20 +79,56 @@ export default function TabOneScreen() {
     }));
   };
 
+  // Function to pick an audio file and convert it to base64
+  const pickAudioFile = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: 'audio/*', // Restrict to audio files
+      });
+
+      if (result.canceled) {
+        return; // Exit if no file is selected
+      }
+
+      const fileUri = result.assets[0].uri;
+      const fileName = result.assets[0].name; // Get the file name
+      setAudioFileName(fileName); // Update state with the file name
+
+      // Fetch the file and convert it to base64
+      const response = await fetch(fileUri);
+      const blob = await response.blob();
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        const base64data = reader.result?.toString().split(',')[1]; // Extract base64 string
+        setAudioFile(base64data || ''); // Update state with base64-encoded audio
+      };
+
+      reader.readAsDataURL(blob); // Encode the file as base64
+
+    } catch (err) {
+      console.error('Audio file selection error:', err);
+      setError('Failed to select audio file.');
+    }
+  };
+
+  // Function to handle form submission and send data to the backend
   const handleSubmit = async () => {
     try {
-      setIsLoading(true);
-      setError(null);
-      setResult(null);
+      setIsLoading(true); // Show loading indicator
+      setError(null); // Clear previous errors
+      setResult(null); // Clear previous results
 
-      const requestData: any = {};
-      
+      const requestData: any = {}; // Object to hold request payload
+
+      // Add lyrics data if selected
       if (selectedAnalyzers.includes('lyrics')) {
         requestData.lyrics_request = {
-          lyrics: lyrics
+          lyrics: lyrics,
         };
       }
-      
+
+      // Add description data if selected
       if (selectedAnalyzers.includes('description')) {
         requestData.description_request = {
           artist: description.artist,
@@ -94,7 +139,14 @@ export default function TabOneScreen() {
           genderOfArtist: description.genderOfArtist,
           language: description.language,
           region: description.region,
-          featuredArtist: description.featuredArtist
+          featuredArtist: description.featuredArtist,
+        };
+      }
+
+      // Add audio data if selected
+      if (selectedAnalyzers.includes('audio') && audioFile) {
+        requestData.audio_request = {
+          audio_file: audioFile, // Send base64-encoded audio
         };
       }
 
@@ -103,36 +155,31 @@ export default function TabOneScreen() {
       console.log('URL:', `${API_URL}/analyze_song`);
       console.log('Request data:', JSON.stringify(requestData, null, 2));
 
-      // Make the actual request
-      console.log('Making POST request...');
-      try {
-        const response = await fetch(`${API_URL}/analyze_song`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: JSON.stringify(requestData),
-        });
+      // Make the POST request to the backend
+      const response = await fetch(`${API_URL}/analyze_song`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+      });
 
-        console.log('Response received. Status:', response.status);
-        const responseText = await response.text();
-        console.log('Raw response:', responseText);
+      console.log('Response received. Status:', response.status);
+      const responseText = await response.text();
+      console.log('Raw response:', responseText);
 
-        if (!response.ok) {
-          throw new Error(`Server returned ${response.status}: ${responseText}`);
-        }
-
-        const result = JSON.parse(responseText);
-        setResult({
-          song: result.song_name,
-          artist: result.song_author,
-          confidence: result.confidence_score,
-        });
-      } catch (fetchError: any) {
-        console.error('Fetch error details:', fetchError);
-        throw new Error(`Network error: ${fetchError.message || 'Unknown error'}`);
+      if (!response.ok) {
+        throw new Error(`Server returned ${response.status}: ${responseText}`);
       }
+
+      // Parse and display the result
+      const result = JSON.parse(responseText);
+      setResult({
+        song: result.song_name,
+        artist: result.song_author,
+        confidence: result.confidence_score,
+      });
     } catch (error) {
       console.error('Detailed error:', error);
       if (error instanceof Error) {
@@ -145,7 +192,7 @@ export default function TabOneScreen() {
         setError('An unexpected error occurred');
       }
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Hide loading indicator
     }
   };
 
@@ -171,6 +218,16 @@ export default function TabOneScreen() {
           <TouchableOpacity
             style={[
               styles.analyzerButton,
+              selectedAnalyzers.includes('audio') && styles.selectedButton,
+            ]}
+            onPress={() => selectAnalyzer('audio')}
+          >
+            <Text style={styles.buttonText}>Audio Analyzer</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.analyzerButton,
               selectedAnalyzers.includes('description') && styles.selectedButton,
             ]}
             onPress={() => selectAnalyzer('description')}
@@ -191,7 +248,19 @@ export default function TabOneScreen() {
                 value={lyrics}
                 onChangeText={setLyrics}
                 placeholder="Paste your lyrics here..."
+                placeholderTextColor="#888"
               />
+            </View>
+          )}
+
+          {selectedAnalyzers.includes('audio') && (
+            <View style={styles.inputSection}>
+              <Text style={styles.sectionTitle}>Input Audio File</Text>
+              <TouchableOpacity style={styles.button} onPress={pickAudioFile}>
+                <Text style={styles.buttonText}>Pick an Audio File</Text>
+              </TouchableOpacity>
+
+              {audioFileName && <Text style={styles.fileName}>Selected file: {audioFileName}</Text>}
             </View>
           )}
 
@@ -205,6 +274,7 @@ export default function TabOneScreen() {
                   value={value}
                   onChangeText={(text) => updateDescription(field as keyof Description, text)}
                   placeholder={`Enter ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`}
+                  placeholderTextColor="#888"
                 />
               ))}
             </View>
@@ -381,5 +451,19 @@ const styles = StyleSheet.create({
   resultLabel: {
     fontWeight: '600',
     color: '#2C3E50',
+  },
+  button: {
+    backgroundColor: '#4A90E2',
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 10,
+    marginVertical: 10,
+    width: '80%',
+    alignItems: 'center',
+  },
+  fileName: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#888',
   },
 });

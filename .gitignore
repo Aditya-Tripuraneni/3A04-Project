@@ -40,4 +40,11 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
+
+# Ignore tester script
+backend/tester.py
+
+# ignore any testing mp3 files
+backend/*.mp3
+
 app-example

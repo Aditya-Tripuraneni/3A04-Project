@@ -4,20 +4,17 @@ from .audioModel import classify_song
 from .song import Song
 from .songIdentifier import SongIdentifier 
 
-
 class AudioIdentifier(SongIdentifier):
     def __init__(self, data: Audio):
         self.audio_data = data
-    
 
     def identify_song(self) -> Data: 
         audio_file_path = self.audio_data.get_audio_data()
 
-        # use model to identify song based on audio file
+        # Use model to identify song based on base64-encoded audio
         song_data = classify_song(audio_file_path)
 
-        # song result is in the form "Name: XXX Artist: YYY" Confidence: "Confidence"
-        # extract the name, artist and confidence score
+        # Song result is in the form "Name: XXX Artist: YYY Confidence: ZZZ"
         song_info = song_data.split(' Confidence:')
         name_part, artist_part = song_info[0].split(' Artist:')
         song_name = name_part.replace("Name:", "").strip()
