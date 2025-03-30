@@ -35,7 +35,8 @@ export default function TabOneScreen() {
   // State to manage selected analyzers (lyrics, audio, description)
   const [selectedAnalyzers, setSelectedAnalyzers] = useState<string[]>([]);
   const [lyrics, setLyrics] = useState(''); // State for lyrics input
-  const [audioFile, setAudioFile] = useState(''); // State for base64-encoded audio file
+  const [audioFile, setAudioFile] = useState<string | null>(null); // State for base64-encoded audio file
+  const [audioFileName, setAudioFileName] = useState<string | null>(null); // State for audio file name
   const [description, setDescription] = useState<Description>({
     artist: '',
     genre: '',
@@ -90,6 +91,8 @@ export default function TabOneScreen() {
       }
 
       const fileUri = result.assets[0].uri;
+      const fileName = result.assets[0].name; // Get the file name
+      setAudioFileName(fileName); // Update state with the file name
 
       // Fetch the file and convert it to base64
       const response = await fetch(fileUri);
@@ -101,7 +104,7 @@ export default function TabOneScreen() {
         setAudioFile(base64data || ''); // Update state with base64-encoded audio
       };
 
-      reader.readAsDataURL(blob); // Encoded the file as base64
+      reader.readAsDataURL(blob); // Encode the file as base64
 
     } catch (err) {
       console.error('Audio file selection error:', err);
@@ -257,7 +260,7 @@ export default function TabOneScreen() {
                 <Text style={styles.buttonText}>Pick an Audio File</Text>
               </TouchableOpacity>
 
-              {audioFile && <Text style={styles.fileName}>Selected file: {audioFile.split('/').pop()}</Text>}
+              {audioFileName && <Text style={styles.fileName}>Selected file: {audioFileName}</Text>}
             </View>
           )}
 

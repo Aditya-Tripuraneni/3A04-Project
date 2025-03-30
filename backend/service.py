@@ -10,7 +10,6 @@ from fastapi.middleware.cors import CORSMiddleware
 import base64
 import os
 import tempfile
-import sys
 
 import logging
 
