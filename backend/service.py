@@ -14,13 +14,7 @@ import sys
 
 import logging
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[
-        logging.StreamHandler(sys.stdout)
-    ]
-)
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 app = FastAPI(debug=True)
@@ -58,14 +52,19 @@ async def analyze_song(request: AnalyzeRequest):
 
         if request.audio_request:
             logging.info("Processing audio request")
-            audio_bytes = base64.b64decode(request.audio_request.audio_file)
-            logging.info("Audio bytes decoded successfully")
-            
+
             with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_file:
-                temp_file.write(audio_bytes)
+                logger.info(f"Temporary audio file created at: {temp_file.name}")
+                base_64_data = request.audio_request.audio_file
+
+                CHUNK_SIZE = 1024 * 1024  # 1 MB
+                for i in range(0, len(base_64_data), CHUNK_SIZE):
+                    chunk = base_64_data[i:i + CHUNK_SIZE]
+                    temp_file.write(base64.b64decode(chunk))
+                    temp_file.flush()
+                
                 tempfile_path = temp_file.name
-                logger.info(f"Temporary audio file created at: {tempfile_path}")
-        
+            
             try:
                 audio = Audio(tempfile_path)
                 logging.info("Audio object created successfully")
