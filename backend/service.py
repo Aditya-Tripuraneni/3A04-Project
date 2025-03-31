@@ -42,12 +42,12 @@ async def analyze_song(request: AnalyzeRequest):
         controller = Controller()
 
         if request.lyrics_request:
-            logger.info("Processing Lyrics")
+            logging.info("Processing Lyrics")
             lyrics = Lyrics(request.lyrics_request.lyrics)
             controller.analyze_data(lyrics)
             
         if request.description_request:
-            logger.info("Processing Description")
+            logging.info("Processing Description")
             description = Description(**request.description_request.model_dump())
             controller.analyze_data(description)
 
