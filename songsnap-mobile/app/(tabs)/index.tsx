@@ -24,11 +24,19 @@ interface Description {
   featuredArtist: string;
 }
 
+// Interface for recommended song
+interface RecommendedSong {
+  song_name: string;
+  song_author: string;
+  confidence_score: number;
+}
+
 // Interface for the analysis result
 interface AnalysisResult {
-  song: string;
-  artist: string;
-  confidence: number;
+  song_name: string;
+  song_author: string;
+  confidence_score: number;
+  recommended_songs: RecommendedSong[];
 }
 
 export default function TabOneScreen() {
@@ -176,9 +184,10 @@ export default function TabOneScreen() {
       // Parse and display the result
       const result = JSON.parse(responseText);
       setResult({
-        song: result.song_name,
-        artist: result.song_author,
-        confidence: result.confidence_score,
+        song_name: result.song_name,
+        song_author: result.song_author,
+        confidence_score: result.confidence_score,
+        recommended_songs: result.recommended_songs,
       });
     } catch (error) {
       console.error('Detailed error:', error);
@@ -298,16 +307,32 @@ export default function TabOneScreen() {
             <Text style={styles.sectionTitle}>Analysis Result</Text>
             <View style={styles.resultContent}>
               <Text style={styles.resultText}>
-                <Text style={styles.resultLabel}>Song:</Text> {result.song}
+                <Text style={styles.resultLabel}>Song:</Text> {result.song_name}
               </Text>
               <Text style={styles.resultText}>
-                <Text style={styles.resultLabel}>Artist:</Text> {result.artist}
+                <Text style={styles.resultLabel}>Artist:</Text> {result.song_author}
               </Text>
               <Text style={styles.resultText}>
                 <Text style={styles.resultLabel}>Confidence:</Text>{' '}
-                {(result.confidence * 100).toFixed(2)}%
+                {(result.confidence_score * 100).toFixed(2)}%
               </Text>
             </View>
+
+            {result.recommended_songs && result.recommended_songs.length > 0 && (
+              <View style={styles.recommendedSection}>
+                <Text style={styles.sectionTitle}>Recommended Songs</Text>
+                {result.recommended_songs.map((song, index) => (
+                  <View key={index} style={styles.recommendedSong}>
+                    <Text style={styles.resultText}>
+                      <Text style={styles.resultLabel}>Song:</Text> {song.song_name}
+                    </Text>
+                    <Text style={styles.resultText}>
+                      <Text style={styles.resultLabel}>Artist:</Text> {song.song_author}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            )}
           </View>
         )}
 
@@ -465,5 +490,19 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 16,
     color: '#888',
+  },
+  recommendedSection: {
+    marginTop: 20,
+    padding: 15,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 10,
+  },
+  recommendedSong: {
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
   },
 });
