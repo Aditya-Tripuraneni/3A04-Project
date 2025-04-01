@@ -1,5 +1,5 @@
 from .data import Data
-
+import math
 
 class Song(Data):
     """Represents song data and provides access to it.
@@ -15,13 +15,13 @@ class Song(Data):
         Args:
             song_name (str): The name of the song.
             song_author (str): The author or artist of the song.
-            confidence_score (float): The confidence score of the song identification.
+            confidence_score (float): The confidence score of the song identification. Initally in logarithms which is later convereted to a value between 0 and 100.
         
         This method sets up the song attributes and stores them in a dictionary.
         """
         self.song_name = song_name
         self.song_author = song_author
-        self.confidence_score = confidence_score
+        self.confidence_score = math.exp(confidence_score) * 100
         self.data = {}
         self._store_data()
 
