@@ -21,7 +21,7 @@ class Song(Data):
         """
         self.song_name = song_name
         self.song_author = song_author
-        self.confidence_score = math.exp(confidence_score)
+        self.confidence_score = math.exp(confidence_score) * 100
         self.data = {}
         self._store_data()
 

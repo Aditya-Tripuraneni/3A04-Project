@@ -401,7 +401,7 @@ export default function TabOneScreen() {
               </Text>
               <Text style={styles.resultText}>
                 <Text style={styles.resultLabel}>Confidence:</Text>{' '}
-                {(result.confidence * 100).toFixed(2)}%
+                {(result.confidence).toFixed(2)}%
               </Text>
             </View>
 
