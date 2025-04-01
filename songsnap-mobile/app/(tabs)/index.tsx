@@ -202,6 +202,7 @@ export default function TabOneScreen() {
   const logSystemTransaction = async () => {
     try {
       const API_URL = `${getApiUrl()}/log_system_transaction`;
+      console.log('URL:', API_URL);
 
       // Prepare the payload
       const payload = {

@@ -114,6 +114,8 @@ async def log_system_transaction(data):
     """
     Logs the system transaction data.
     """
+    logger.info("Starting /log_system_transaction endpoint")
+    logger.info(f"Received data: {data}")
     try:
         logger.info("Starting /log_system_transaction endpoint")
         repository = FirestoreReportRepository(db)
