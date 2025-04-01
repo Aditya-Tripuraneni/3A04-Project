@@ -115,7 +115,6 @@ async def log_system_transaction(data: LogTransactionRequest):
     Logs the system transaction data.
     """
     logger.info("Starting /log_system_transaction endpoint")
-    logger.info(f"Received data: {data.model_dump()}")
     try:
         logger.info("Starting /log_system_transaction endpoint")
         repository = FirestoreReportRepository(db)
@@ -123,8 +122,10 @@ async def log_system_transaction(data: LogTransactionRequest):
         logger.info("FirestoreReportRepository and ReportGenerator initialized successfully")
         logger.debug(f"Incoming data: {data}")
 
+
+
         # Create a SongIdentificationReport object from the incoming data
-        report = SongIdentificationReport(**data)
+        report = SongIdentificationReport(**data.model_dump())
         
         # Generate and save the report
         generator.generateAndSaveReport(report)
