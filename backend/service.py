@@ -6,6 +6,7 @@ from .audio import Audio
 from .models import AnalyzeRequest, SongPredictionResponse
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from .artistBasedRecommender import ArtistBasedRecommender
 
 import base64
 import os
@@ -79,7 +80,17 @@ async def analyze_song(request: AnalyzeRequest):
         final_song_data = final_song.get_song_data()
         logger.info("Returning final song data")
 
-        return SongPredictionResponse(**final_song_data)
+        # Create response with final song data
+        response = SongPredictionResponse(**final_song_data)
+        
+        # Get artist-based recommendations
+        recommender = ArtistBasedRecommender(response)
+        recommended_songs = recommender.recommend_songs()
+        
+        # Add recommended songs to the response
+        response.recommended_songs = [song.get_song_data() for song in recommended_songs]
+        
+        return response
     except Exception as e:
         traceback.print_exc()
         logger.exception("An error occurred while processing the request")

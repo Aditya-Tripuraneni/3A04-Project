@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import List, Dict
 
 class LyricsRequest(BaseModel):
     lyrics: str
@@ -22,6 +23,7 @@ class SongPredictionResponse(BaseModel):
     song_name: str = "Unknown Song"
     song_author: str = "Unknown Artist"
     confidence_score: float = 0.0
+    recommended_songs: List[Dict] = []
 
 
 class AnalyzeRequest(BaseModel):
