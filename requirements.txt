@@ -1,14 +1,18 @@
 annotated-types==0.7.0
 anyio==4.9.0
 beautifulsoup4==4.13.3
+CacheControl==0.14.2
 cachetools==5.5.2
 certifi==2025.1.31
+cffi==1.17.1
 charset-normalizer==3.4.1
 click==8.1.8
 contourpy==1.3.1
+cryptography==44.0.2
 cycler==0.12.1
 docstring_parser==0.16
 fastapi==0.115.12
+firebase-admin==6.7.0
 fonttools==4.56.0
 google-ai-generativelanguage==0.6.15
 google-api-core==2.24.2
@@ -18,6 +22,7 @@ google-auth-httplib2==0.2.0
 google-cloud-aiplatform==1.85.0
 google-cloud-bigquery==3.30.0
 google-cloud-core==2.4.3
+google-cloud-firestore==2.20.1
 google-cloud-resource-manager==1.14.2
 google-cloud-storage==2.19.0
 google-crc32c==1.7.0
@@ -37,6 +42,7 @@ jsonpath-ng==1.7.0
 kiwisolver==1.4.8
 lyricsgenius==3.3.0
 matplotlib==3.10.1
+msgpack==1.1.0
 numpy==2.2.4
 overrides==7.7.0
 packaging==24.2
@@ -46,8 +52,10 @@ proto-plus==1.26.1
 protobuf==5.29.3
 pyasn1==0.6.1
 pyasn1_modules==0.4.1
+pycparser==2.22
 pydantic==2.10.6
 pydantic_core==2.27.2
+PyJWT==2.10.1
 pyparsing==3.2.1
 python-dateutil==2.9.0.post0
 requests==2.32.3

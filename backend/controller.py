@@ -39,7 +39,7 @@ class Controller:
             self.blackboard.write_fact(FactKeys.LYRICAL_TEXT, lyrics)
             self.blackboard.write_partial_solution(PartialSolutionKeys.LYRICAL_RESULT, song_prediction)
 
-        elif isinstance(data, Data):
+        elif isinstance(data, Description):
             # Handle description data (generic Data type or specific subclass)
             song_prediction = self.description_analyzer.analyze_data(data)
             self.blackboard.write_fact(FactKeys.DESCRIPTION_TEXT, data)
