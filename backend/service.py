@@ -5,7 +5,7 @@ from .artistBasedRecommender import ArtistBasedRecommender
 from .repositories.firestoreReportRepository import FirestoreReportRepository
 from .reportModels.songIdentificationReport import SongIdentificationReport
 from .generators.reportGenerator import ReportGenerator
-from .database import db
+from .database.databaseRepository import db
 
 
 from .controller import Controller
