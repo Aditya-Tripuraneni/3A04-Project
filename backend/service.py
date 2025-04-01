@@ -2,7 +2,11 @@ import traceback
 
 from .artistBasedRecommender import ArtistBasedRecommender
 
-from .songRecommender import SongRecommender
+from repositories.firestoreReportRepository import FirestoreReportRepository
+from reportModels.songIdentificationReport import SongIdentificationReport
+from generators.reportGenerator import ReportGenerator
+
+
 from .controller import Controller
 from .description import Description
 from .lyrics import Lyrics
@@ -89,6 +93,8 @@ async def analyze_song(request: AnalyzeRequest):
         recommended_songs = reccomender.recommend_songs()
         logger.info("Recommended songs generated successfully")
         logger.info(f"Recommended songs: {recommended_songs}")
+
+
 
         return SongPredictionResponse(predicted_song= PredictedSong(**final_song_data), 
                                       recommended_songs=recommended_songs
