@@ -2,9 +2,9 @@ import traceback
 
 from .artistBasedRecommender import ArtistBasedRecommender
 
-from repositories.firestoreReportRepository import FirestoreReportRepository
-from reportModels.songIdentificationReport import SongIdentificationReport
-from generators.reportGenerator import ReportGenerator
+from .repositories.firestoreReportRepository import FirestoreReportRepository
+from .reportModels.songIdentificationReport import SongIdentificationReport
+from .generators.reportGenerator import ReportGenerator
 
 
 from .controller import Controller
