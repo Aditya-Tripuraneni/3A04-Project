@@ -1,4 +1,4 @@
-from models.report import Report
+from report import Report
 
 class SongIdentificationReport(Report):
     def __init__(self, songName, userGuess, songIdentified, accuracyScore, recommendedArtists, timestamp=None):

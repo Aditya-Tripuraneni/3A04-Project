@@ -1,5 +1,5 @@
 from repositories.reportRepository import ReportRepository
-from models.report import Report
+from reportModels.report import Report
 
 class ReportGenerator:
     def __init__(self, reportRepository: ReportRepository):
