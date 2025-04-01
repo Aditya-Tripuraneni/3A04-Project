@@ -12,7 +12,7 @@ from .controller import Controller
 from .description import Description
 from .lyrics import Lyrics
 from .audio import Audio
-from .models import AnalyzeRequest, PredictedSong, SongPredictionResponse
+from .models import AnalyzeRequest, PredictedSong, SongPredictionResponse, LogTransactionRequest
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -110,12 +110,12 @@ async def analyze_song(request: AnalyzeRequest):
     
 
 @app.post("/log_system_transaction")
-async def log_system_transaction(data):
+async def log_system_transaction(data: LogTransactionRequest):
     """
     Logs the system transaction data.
     """
     logger.info("Starting /log_system_transaction endpoint")
-    logger.info(f"Received data: {data}")
+    logger.info(f"Received data: {data.model_dump()}")
     try:
         logger.info("Starting /log_system_transaction endpoint")
         repository = FirestoreReportRepository(db)
@@ -132,6 +132,7 @@ async def log_system_transaction(data):
 
         return {"message": "Transaction logged successfully"}
     except Exception as e:
+        traceback.print_exc()
         logger.exception("An error occurred while logging the transaction")
         raise HTTPException(status_code=500, detail=str(e))
 

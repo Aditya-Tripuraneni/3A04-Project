@@ -39,3 +39,12 @@ class AnalyzeRequest(BaseModel):
     lyrics_request: LyricsRequest | None = None
     audio_request: AudioRequest | None = None
     description_request: DescriptionRequest | None = None
+
+
+class LogTransactionRequest(BaseModel):
+    songName: str
+    userGuess: str
+    songIdentified: str
+    accuracyScore: float
+    recommendedArtists: List[str]
+    timestamp: str
