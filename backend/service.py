@@ -5,6 +5,7 @@ from .artistBasedRecommender import ArtistBasedRecommender
 from .repositories.firestoreReportRepository import FirestoreReportRepository
 from .reportModels.songIdentificationReport import SongIdentificationReport
 from .generators.reportGenerator import ReportGenerator
+from .database import db
 
 
 from .controller import Controller
@@ -105,5 +106,30 @@ async def analyze_song(request: AnalyzeRequest):
         traceback.print_exc()
         logger.exception("An error occurred while processing the request")
         
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+@app.post("/log_system_transaction")
+async def log_system_transaction(data):
+    """
+    Logs the system transaction data.
+    """
+    try:
+        logger.info("Starting /log_system_transaction endpoint")
+        repository = FirestoreReportRepository(db)
+        generator = ReportGenerator(repository)
+        logger.info("FirestoreReportRepository and ReportGenerator initialized successfully")
+        logger.debug(f"Incoming data: {data}")
+
+        # Create a SongIdentificationReport object from the incoming data
+        report = SongIdentificationReport(**data)
+        
+        # Generate and save the report
+        generator.generateAndSaveReport(report)
+        logger.info("Report generated and saved successfully")
+
+        return {"message": "Transaction logged successfully"}
+    except Exception as e:
+        logger.exception("An error occurred while logging the transaction")
         raise HTTPException(status_code=500, detail=str(e))
 
