@@ -1,9 +1,13 @@
 import traceback
+
+from .artistBasedRecommender import ArtistBasedRecommender
+
+from .songRecommender import SongRecommender
 from .controller import Controller
 from .description import Description
 from .lyrics import Lyrics
 from .audio import Audio
-from .models import AnalyzeRequest, SongPredictionResponse
+from .models import AnalyzeRequest, PredictedSong, SongPredictionResponse
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -81,7 +85,16 @@ async def analyze_song(request: AnalyzeRequest):
         final_song_data = final_song.get_song_data()
         logger.info("Returning final song data")
 
-        return SongPredictionResponse(**final_song_data)
+        reccomender = ArtistBasedRecommender(final_song)
+        recommended_songs = reccomender.recommend_songs()
+        logger.info("Recommended songs generated successfully")
+        logger.info(f"Recommended songs: {recommended_songs}")
+
+        return SongPredictionResponse(predicted_song= PredictedSong(**final_song_data), 
+                                      recommended_songs=recommended_songs
+                                    )  
+        
+
     except Exception as e:
         traceback.print_exc()
         logger.exception("An error occurred while processing the request")

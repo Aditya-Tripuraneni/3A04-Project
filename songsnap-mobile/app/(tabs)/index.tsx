@@ -31,8 +31,13 @@ interface AnalysisResult {
   confidence: number;
 }
 
+// Interface for recommended songs
+interface RecommendedSong {
+  song_name: string;
+  song_author: string;
+}
+
 export default function TabOneScreen() {
-  // State to manage selected analyzers (lyrics, audio, description)
   const [selectedAnalyzers, setSelectedAnalyzers] = useState<string[]>([]);
   const [lyrics, setLyrics] = useState(''); // State for lyrics input
   const [audioFile, setAudioFile] = useState<string | null>(null); // State for base64-encoded audio file
@@ -48,33 +53,29 @@ export default function TabOneScreen() {
     region: '',
     featuredArtist: '',
   });
+
   const [showGuessInput, setShowGuessInput] = useState(false);
   const [userGuessSong, setUserGuessSong] = useState('');
   const [userGuessArtist, setUserGuessArtist] = useState('');
   const [result, setResult] = useState<AnalysisResult | null>(null); // State for analysis result
+  const [recommendedSongs, setRecommendedSongs] = useState<RecommendedSong[]>([]); // State for recommended songs
   const [error, setError] = useState<string | null>(null); // State for error messages
   const [isLoading, setIsLoading] = useState(false); // State for loading indicator
 
-  // Function to determine the correct API URL
   const getApiUrl = () => {
-    // Replace with your backend URL
     return 'https://song-snap-3a04-4c786329b520.herokuapp.com';
   };
 
-  // Function to toggle analyzers (lyrics, audio, description)
   const selectAnalyzer = (analyzerName: string) => {
     setSelectedAnalyzers(currentAnalyzers => {
       if (currentAnalyzers.includes(analyzerName)) {
-        // Remove analyzer if already selected
         return currentAnalyzers.filter(name => name !== analyzerName);
       } else {
-        // Add analyzer to the list
         return [...currentAnalyzers, analyzerName];
       }
     });
   };
 
-  // Function to update description fields dynamically
   const updateDescription = (field: keyof Description, value: string) => {
     setDescription(prev => ({
       ...prev,
@@ -82,56 +83,51 @@ export default function TabOneScreen() {
     }));
   };
 
-  // Function to pick an audio file and convert it to base64
   const pickAudioFile = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
-        type: 'audio/*', // Restrict to audio files
+        type: 'audio/*',
       });
 
       if (result.canceled) {
-        return; // Exit if no file is selected
+        return;
       }
 
       const fileUri = result.assets[0].uri;
-      const fileName = result.assets[0].name; // Get the file name
-      setAudioFileName(fileName); // Update state with the file name
+      const fileName = result.assets[0].name;
+      setAudioFileName(fileName);
 
-      // Fetch the file and convert it to base64
       const response = await fetch(fileUri);
       const blob = await response.blob();
       const reader = new FileReader();
 
       reader.onloadend = () => {
-        const base64data = reader.result?.toString().split(',')[1]; // Extract base64 string
-        setAudioFile(base64data || ''); // Update state with base64-encoded audio
+        const base64data = reader.result?.toString().split(',')[1];
+        setAudioFile(base64data || '');
       };
 
-      reader.readAsDataURL(blob); // Encode the file as base64
-
+      reader.readAsDataURL(blob);
     } catch (err) {
       console.error('Audio file selection error:', err);
       setError('Failed to select audio file.');
     }
   };
 
-  // Function to handle form submission and send data to the backend
   const handleSubmit = async () => {
     try {
-      setIsLoading(true); // Show loading indicator
-      setError(null); // Clear previous errors
-      setResult(null); // Clear previous results
+      setIsLoading(true);
+      setError(null);
+      setResult(null);
+      setRecommendedSongs([]);
 
-      const requestData: any = {}; // Object to hold request payload
+      const requestData: any = {};
 
-      // Add lyrics data if selected
       if (selectedAnalyzers.includes('lyrics')) {
         requestData.lyrics_request = {
           lyrics: lyrics,
         };
       }
 
-      // Add description data if selected
       if (selectedAnalyzers.includes('description')) {
         requestData.description_request = {
           artist: description.artist,
@@ -146,10 +142,9 @@ export default function TabOneScreen() {
         };
       }
 
-      // Add audio data if selected
       if (selectedAnalyzers.includes('audio') && audioFile) {
         requestData.audio_request = {
-          audio_file: audioFile, // Send base64-encoded audio
+          audio_file: audioFile,
         };
       }
 
@@ -158,7 +153,6 @@ export default function TabOneScreen() {
       console.log('URL:', `${API_URL}/analyze_song`);
       console.log('Request data:', JSON.stringify(requestData, null, 2));
 
-      // Make the POST request to the backend
       const response = await fetch(`${API_URL}/analyze_song`, {
         method: 'POST',
         headers: {
@@ -176,13 +170,19 @@ export default function TabOneScreen() {
         throw new Error(`Server returned ${response.status}: ${responseText}`);
       }
 
-      // Parse and display the result
       const result = JSON.parse(responseText);
+      console.log('Parsed result:', result);
+
+      const predictedSong = result.predicted_song;
+      const recommendedSongs = result.recommended_songs;
+
       setResult({
-        song: result.song_name,
-        artist: result.song_author,
-        confidence: result.confidence_score,
+        song: predictedSong.song_name,
+        artist: predictedSong.song_author,
+        confidence: predictedSong.confidence_score,
       });
+
+      setRecommendedSongs(recommendedSongs);
     } catch (error) {
       console.error('Detailed error:', error);
       if (error instanceof Error) {
@@ -195,26 +195,24 @@ export default function TabOneScreen() {
         setError('An unexpected error occurred');
       }
     } finally {
-      setIsLoading(false); // Hide loading indicator
+      setIsLoading(false);
     }
-  }
+  };
 
   const compareGuess = () => {
     if (result) {
-      // Check if the song and artist match
-      const isCorrect = 
-        result.song.toLowerCase() === userGuessSong.toLowerCase() && 
+      const isCorrect =
+        result.song.toLowerCase() === userGuessSong.toLowerCase() &&
         result.artist.toLowerCase() === userGuessArtist.toLowerCase();
-  
+
       if (isCorrect) {
-        return 'Your guess was correct!'
-      }
-      else {
-        return 'Your guess was not correct!'
+        return 'Your guess was correct!';
+      } else {
+        return 'Your guess was not correct!';
       }
     }
     return '';
-  }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -332,7 +330,6 @@ export default function TabOneScreen() {
           )}
         </View>
 
-
         {/* Results Section */}
         {isLoading && (
           <View style={styles.loadingContainer}>
@@ -360,6 +357,17 @@ export default function TabOneScreen() {
                 {(result.confidence * 100).toFixed(2)}%
               </Text>
             </View>
+
+            {recommendedSongs.length > 0 && (
+              <View style={styles.resultContent}>
+                <Text style={styles.sectionTitle}>Recommended Songs</Text>
+                {recommendedSongs.map((song, index) => (
+                  <Text key={index} style={styles.resultText}>
+                    <Text style={styles.resultLabel}>Song:</Text> {song.song_name} - {song.song_author}
+                  </Text>
+                ))}
+              </View>
+            )}
           </View>
         )}
 
@@ -527,5 +535,5 @@ const styles = StyleSheet.create({
   },
   guessResultSection: {
     marginTop: 20,
-  }
+  },
 });
