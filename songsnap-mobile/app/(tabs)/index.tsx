@@ -48,6 +48,9 @@ export default function TabOneScreen() {
     region: '',
     featuredArtist: '',
   });
+  const [showGuessInput, setShowGuessInput] = useState(false);
+  const [userGuessSong, setUserGuessSong] = useState('');
+  const [userGuessArtist, setUserGuessArtist] = useState('');
   const [result, setResult] = useState<AnalysisResult | null>(null); // State for analysis result
   const [error, setError] = useState<string | null>(null); // State for error messages
   const [isLoading, setIsLoading] = useState(false); // State for loading indicator
@@ -194,7 +197,24 @@ export default function TabOneScreen() {
     } finally {
       setIsLoading(false); // Hide loading indicator
     }
-  };
+  }
+
+  const compareGuess = () => {
+    if (result) {
+      // Check if the song and artist match
+      const isCorrect = 
+        result.song.toLowerCase() === userGuessSong.toLowerCase() && 
+        result.artist.toLowerCase() === userGuessArtist.toLowerCase();
+  
+      if (isCorrect) {
+        return 'Your guess was correct!'
+      }
+      else {
+        return 'Your guess was not correct!'
+      }
+    }
+    return '';
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -233,6 +253,16 @@ export default function TabOneScreen() {
             onPress={() => selectAnalyzer('description')}
           >
             <Text style={styles.buttonText}>Description Analyzer</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.analyzerButton,
+              showGuessInput && styles.selectedButton,
+            ]}
+            onPress={() => setShowGuessInput(!showGuessInput)}
+          >
+            <Text style={styles.buttonText}>Guess the Song?</Text>
           </TouchableOpacity>
         </View>
 
@@ -273,13 +303,35 @@ export default function TabOneScreen() {
                   style={styles.input}
                   value={value}
                   onChangeText={(text) => updateDescription(field as keyof Description, text)}
-                  placeholder={`Enter ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`}
+                  placeholder={`Enter ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}...`}
                   placeholderTextColor="#888"
                 />
               ))}
             </View>
           )}
+
+          {showGuessInput && (
+            <View style={styles.inputSection}>
+              <Text style={styles.sectionTitle}>Enter Guess of Song</Text>
+              <TextInput
+                style={styles.input}
+                value={userGuessSong}
+                onChangeText={setUserGuessSong}
+                placeholder="Enter song title..."
+                placeholderTextColor="#888"
+              />
+
+              <TextInput
+                style={styles.input}
+                value={userGuessArtist}
+                onChangeText={setUserGuessArtist}
+                placeholder="Enter artist..."
+                placeholderTextColor="#888"
+              />
+            </View>
+          )}
         </View>
+
 
         {/* Results Section */}
         {isLoading && (
@@ -308,6 +360,13 @@ export default function TabOneScreen() {
                 {(result.confidence * 100).toFixed(2)}%
               </Text>
             </View>
+          </View>
+        )}
+
+        {showGuessInput && result && (
+          <View style={styles.resultSection}>
+            <Text style={styles.sectionTitle}>Guess Result</Text>
+            <Text style={styles.resultText}>{compareGuess()}</Text>
           </View>
         )}
 
@@ -466,4 +525,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#888',
   },
+  guessResultSection: {
+    marginTop: 20,
+  }
 });
