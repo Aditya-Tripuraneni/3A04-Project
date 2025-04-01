@@ -1,4 +1,4 @@
-from repositories.reportRepository import ReportRepository
+from .reportRepository import ReportRepository
 
 
 
