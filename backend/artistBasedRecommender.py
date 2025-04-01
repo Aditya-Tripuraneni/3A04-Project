@@ -47,7 +47,7 @@ class ArtistBasedRecommender(SongRecommender):
                 song_name = name_part.replace("Name:", "").strip()
                 artist_name = artist_part.strip()
 
-                song_recommendation = SongModel(song_name, artist_name)
+                song_recommendation = SongModel(song_name=song_name, song_author=artist_name)
                 
                 recommended_songs.append(song_recommendation)
 
