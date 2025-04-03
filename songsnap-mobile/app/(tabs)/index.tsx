@@ -183,6 +183,35 @@ export default function TabOneScreen() {
       });
 
       setRecommendedSongs(recommendedSongs);
+
+      // Log the system transaction after analysis is successful
+      const payload = {
+        songName: predictedSong.song_name, // System's predicted song name
+        userGuess: userGuessSong ? `${userGuessSong} by ${userGuessArtist}` : 'N/A', // User's guess or N/A
+        songIdentified: `${predictedSong.song_name} by ${predictedSong.song_author}`, // System's identified song
+        accuracyScore: predictedSong.confidence_score, // System Confidence score
+        recommendedArtists: recommendedSongs.map(
+          (song: { song_name: any; song_author: any; }) => `${song.song_name} by ${song.song_author}`
+        ), // Recommended songs from the system
+        timestamp: new Date().toISOString(), // Current timestamp
+      };
+
+      console.log('Logging system transaction:', payload);
+
+      const logResponse = await fetch(`${API_URL}/log_system_transaction`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!logResponse.ok) {
+        throw new Error(`Failed to log transaction: ${logResponse.statusText}`);
+      }
+
+      const logData = await logResponse.json();
+      console.log(logData.message); // "Transaction logged successfully"
     } catch (error) {
       console.error('Detailed error:', error);
       if (error instanceof Error) {
@@ -198,53 +227,6 @@ export default function TabOneScreen() {
       setIsLoading(false);
     }
   };
-
-  const logSystemTransaction = async () => {
-    try {
-      const API_URL = `${getApiUrl()}/log_system_transaction`;
-      console.log('URL:', API_URL);
-
-      // Prepare the payload
-      const payload = {
-        songName: result?.song, // System's predicted song name
-        userGuess: `${userGuessSong} by ${userGuessArtist}`, // User's guess
-        songIdentified: `${result?.song} by ${result?.artist}`, // System's identified song
-        accuracyScore: result?.confidence, // System Confidence score
-        recommendedArtists: recommendedSongs.map(
-          (song) => `${song.song_name} by ${song.song_author}`
-        ), // Recommended songs from the system
-        timestamp: new Date().toISOString(), // Current timestamp
-      };
-
-      console.log('Logging system transaction:', payload);
-
-      // Make the API call
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to log transaction: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      console.log(data.message); // "Transaction logged successfully"
-    } catch (error) {
-      console.error('Error logging system transaction:', error);
-    }
-  };
-
-  // Automatically log the transaction when all required data is available
-  useEffect(() => {
-    if (result && userGuessSong && userGuessArtist) {
-      console.log('All required data is available. Logging system transaction...');
-      logSystemTransaction();
-    }
-  }, [result, userGuessSong, userGuessArtist]); // Dependencies to monitor
 
   const compareGuess = () => {
     if (result) {
