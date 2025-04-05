@@ -44,7 +44,7 @@ def classify_song(audio_file_path):
         mime_type="audio/mpeg"  # Adjust the MIME type if needed
     )
 
-    model = "gemini-2.0-pro-exp-02-05"
+    model = "gemini-2.5-pro-exp-03-25"
     logger.info(f"Model: {model}")
 
     contents = [
@@ -77,8 +77,8 @@ def classify_song(audio_file_path):
    # Use the client to generate content
     try:
         print(f"Sending request to model: {model}")
-        print(f"Contents: {contents}")
-        print(f"Config: {generate_content_config}")
+        print(f"Contents: ")
+        print(f"Config: ")
 
         client_models = client.models.generate_content_stream(
             model=model,
