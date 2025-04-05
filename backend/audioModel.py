@@ -41,8 +41,7 @@ def classify_song(audio_file_path):
         mime_type="audio/mpeg"  # Adjust the MIME type if needed
     )
 
-    model = "gemini-2.0-pro-exp-02-05"
-
+    model = "gemini-2.5-pro-exp-03-25"
     contents = [
         types.Content(
             role="user",
@@ -60,7 +59,7 @@ def classify_song(audio_file_path):
         temperature=1,
         top_p=1,
         seed=0,
-        max_output_tokens=2048,
+        max_output_tokens=65535,
         response_modalities=["TEXT"],
         safety_settings=[
             types.SafetySetting(category="HARM_CATEGORY_HATE_SPEECH", threshold="OFF"),
