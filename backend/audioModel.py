@@ -4,7 +4,10 @@ from google import genai
 import os
 import json
 from google.genai import types
+import logging
 
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 def classify_song(audio_file_path):
     # Load credentials from the environment variable
@@ -41,7 +44,8 @@ def classify_song(audio_file_path):
         mime_type="audio/mpeg"  # Adjust the MIME type if needed
     )
 
-    model = "gemini-2.0-pro-exp-02-05"
+    model = "gemini-2.5-pro-exp-03-25"
+    logger.info(f"Model: {model}")
 
     contents = [
         types.Content(
@@ -60,7 +64,7 @@ def classify_song(audio_file_path):
         temperature=1,
         top_p=1,
         seed=0,
-        max_output_tokens=2048,
+        max_output_tokens=65535,
         response_modalities=["TEXT"],
         safety_settings=[
             types.SafetySetting(category="HARM_CATEGORY_HATE_SPEECH", threshold="OFF"),
@@ -70,16 +74,25 @@ def classify_song(audio_file_path):
         ],
     )
 
-    # Use the client to generate content
-    client_models = client.models.generate_content_stream(
-        model=model,
-        contents=contents,
-        config=generate_content_config,
-    )
+   # Use the client to generate content
+    try:
+        print(f"Sending request to model: {model}")
+        print(f"Contents: ")
+        print(f"Config: ")
 
-    response_text = ""
-    for chunk in client_models:
-        response_text += chunk.text if chunk.text else ""
+        client_models = client.models.generate_content_stream(
+            model=model,
+            contents=contents,
+            config=generate_content_config,
+        )
 
-    # Song result is in the form "Name: XXX Artist: YYY Confidence: ZZZ"
-    return response_text
+        response_text = ""
+        for chunk in client_models:
+            response_text += chunk.text if chunk.text else ""
+
+        # Song result is in the form "Name: XXX Artist: YYY Confidence: ZZZ"
+        return response_text
+
+    except genai.errors.ClientError as e:
+        print(f"GenAI API returned an error: {e}")
+        raise
