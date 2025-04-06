@@ -45,8 +45,6 @@ def classify_song(audio_file_path):
     )
 
     model = "gemini-2.5-pro-exp-03-25"
-    logger.info(f"Model: {model}")
-
     contents = [
         types.Content(
             role="user",
