@@ -5,8 +5,8 @@
   "identifier": "com.songsnap.app",
   "build": {
     "frontendDist": "../dist",
-    "devUrl": "http://localhost:19006",
-    "beforeDevCommand": "npm run web",
+    "devUrl": "http://localhost:8081",
+    "beforeDevCommand": "npm run start",
     "beforeBuildCommand": "npm run build"
   },
   "app": {
@@ -16,7 +16,8 @@
         "width": 800,
         "height": 600,
         "resizable": true,
-        "fullscreen": false
+        "fullscreen": false,
+        "center": true
       }
     ],
     "security": {
@@ -32,6 +33,7 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
+
     ]
   }
 }
