@@ -1,0 +1,44 @@
+name: 'CI'
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+          cache-dependency-path: songsnap-mobile/package-lock.json
+
+      - name: Install dependencies
+        run: cd songsnap-mobile && npm ci
+
+      - name: Run tests
+        run: cd songsnap-mobile && npm test -- --passWithNoTests
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+          cache-dependency-path: songsnap-mobile/package-lock.json
+
+      - name: Install dependencies
+        run: cd songsnap-mobile && npm ci
+
+      - name: Typecheck
+        run: cd songsnap-mobile && npx tsc --noEmit 
