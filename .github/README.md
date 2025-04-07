@@ -25,6 +25,18 @@ This workflow handles building and releasing the Tauri application:
   - Artifact upload for each platform
   - Automated GitHub release creation for tags
 
+### 3. Create Release Workflow (`release.yml`)
+
+This workflow creates a GitHub release without building artifacts:
+
+- Triggered on:
+  - New tags starting with `v*`
+  - Manual execution via workflow_dispatch (with version input)
+
+- Features:
+  - Creates a draft GitHub release
+  - Generates release notes automatically
+
 ## Setting Up Repository Secrets
 
 The workflows may require these secrets to be set in your GitHub repository:
@@ -48,3 +60,5 @@ git push origin v1.0.0
 ```
 
 This will automatically trigger the release workflow, which will build and publish the application.
+
+Alternatively, you can manually trigger the release workflow from the GitHub Actions tab.

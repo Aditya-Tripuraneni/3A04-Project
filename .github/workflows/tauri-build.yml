@@ -1,4 +1,4 @@
-name: Package binary with Tauri
+name: 'Tauri Build and Release'
 
 on:
   push:
@@ -51,7 +51,7 @@ jobs:
           args: --verbose
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: SongSnap-${{ matrix.platform }}
           path: |
@@ -69,12 +69,12 @@ jobs:
       - uses: actions/checkout@v4
       
       - name: Download all artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: artifacts
           
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
