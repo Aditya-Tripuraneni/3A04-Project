@@ -17,6 +17,8 @@ jobs:
       fail-fast: false
       matrix:
         platform: [macos-latest, ubuntu-latest, windows-latest]
+        exclude:
+          - platform: ubuntu-latest
 
     runs-on: ${{ matrix.platform }}
     steps:
